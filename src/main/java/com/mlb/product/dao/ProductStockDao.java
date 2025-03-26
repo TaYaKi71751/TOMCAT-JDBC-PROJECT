@@ -7,15 +7,6 @@ import com.mlb.product.dto.ProductStockDto;
 import com.mlb.utils.*;
 
 public class ProductStockDao {
-    private static ProductStockDao instance = new ProductStockDao();
-    
-    private ProductStockDao() {
-    }
-    
-    public static ProductStockDao getInstance() {
-        return instance;
-    }
-    
     public ArrayList<ProductStockDto> selectAll(){
         ArrayList<ProductStockDto> list = new ArrayList<ProductStockDto>();
         String sql = "SELECT * FROM product_stocks";
@@ -38,7 +29,7 @@ public class ProductStockDao {
         return list;
     }
     
-    public ArrayList<ProductStockDto> selectByProduct(Long pr_id){
+    public ArrayList<ProductStockDto> selectByProductId(Long pr_id){
         ArrayList<ProductStockDto> list = new ArrayList<ProductStockDto>();
         String sql = "SELECT * FROM product_stocks";
         ResultSet rs = DBConn.statementQuery(sql);
@@ -63,24 +54,14 @@ public class ProductStockDao {
         return list;
     }
 
-    public void updateQuantity(Long pr_st_id, Long quantity){
-        String sql = "UPDATE product_stock SET quantity = " + quantity + " WHERE pr_st_id = " + pr_st_id;
-        DBConn.statementUpdate(sql);
-    }
-    public void decreaseQuantity(Long pr_st_id, Long quantity){
-        String sql = "UPDATE product_stock SET quantity = quantity - " + quantity + " WHERE pr_st_id = " + pr_st_id;
-        DBConn.statementUpdate(sql);
-    }
-    public void increaseQuantity(Long pr_st_id, Long quantity){
-        String sql = "UPDATE product_stock SET quantity = quantity + " + quantity + " WHERE pr_st_id = " + pr_st_id;
-        DBConn.statementUpdate(sql);
-    }
-    public void updatePrice(Long pr_st_id, Long price){
-        String sql = "UPDATE product_stock SET price = " + price + " WHERE pr_st_id = " + pr_st_id;
-        DBConn.statementUpdate(sql);
-    }
-    public void updatePriceByProduct(Long pr_id, Long price){
-        String sql = "UPDATE product_stock SET price = " + price + " WHERE pr_id = " + pr_id;
+    public void update(ProductStockDto dto){
+        String sql = "UPDATE product_stocks SET " 
+        + "pr_id = " + dto.getPr_id() + " , " 
+        + "cl_id = " + dto.getCl_id() + " , "
+        + "sz_id = " + dto.getSz_id() + " , "
+        + "quantity = " + dto.getQuantity() + " , "
+        + "price = " + dto.getPrice()
+        + " WHERE pr_st_id = " + dto.getPr_st_id();
         DBConn.statementUpdate(sql);
     }
 }

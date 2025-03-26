@@ -258,7 +258,7 @@ public class ProductDao {
 		return list;
 	}
 
-	public ProductDto selectById(long pr_id){
+	public ProductDto selectByProductId(long pr_id){
 		ProductDto dto = new ProductDto();
 		String sql = "SELECT * FROM products WHERE pr_id = " + pr_id;
 		ResultSet rs = DBConn.statementQuery(sql);

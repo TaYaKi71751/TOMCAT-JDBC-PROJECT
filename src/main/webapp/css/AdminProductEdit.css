@@ -1,0 +1,17 @@
+body {
+    display: flex;
+    width: 100%;
+    background-color: #f9f9f9;
+    justify-content: center;
+}
+th {
+    background-color: #ddd;
+}
+th,td {
+    padding: 10px;
+    margin: 5px;
+    border-radius: 9999px;
+}
+.product-id,.product-name,.product-color,.product-size,.product-category,.product-team,.product-price,.product-quantity,.product-thumbnail-image,.product-detail-image {
+    max-width: 100px;
+}

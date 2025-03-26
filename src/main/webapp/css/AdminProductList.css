@@ -47,7 +47,7 @@ body {
 .product-thum-img,.product-name,.product-category,.product-team {
     margin: 0;
 }
-.page-number,.page-button {
+.page-number,.page-button,.button {
     text-decoration: none;
     margin: 0 5px;
     padding: 5px 10px;

@@ -1,5 +1,7 @@
 package com.mlb.product.dto;
 
+import com.mlb.product.dao.ColorDao;
+
 public class ProductStockDto {
 	private Long pr_st_id;
 	private Long pr_id;
@@ -42,6 +44,14 @@ public class ProductStockDto {
 
 	public void setCl_id(String cl_id) {
 		this.cl_id = cl_id;
+	}
+
+	public String getCl_hexcode() {
+		return new ColorDao().getColorById(cl_id).getCl_hexcode();
+	}
+
+	public String getCl_name() {
+		return new ColorDao().getColorById(cl_id).getCl_name();
 	}
 
 	public String getSz_id() {

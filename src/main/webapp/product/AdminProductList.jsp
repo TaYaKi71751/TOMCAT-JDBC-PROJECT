@@ -3,16 +3,26 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<%
+request.setCharacterEncoding("UTF-8");
+session.setAttribute("grade", "admin");
+%>
 <%@ page import="java.util.*" %>
 <%@ page import="java.time.*" %>
 <%@ page import="com.mlb.product.dao.*" %>
 <%@ page import="com.mlb.product.dto.*" %>
 <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/css/Font.css">
-<link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/css/ProductList.css">
+<link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/css/AdminProductList.css">
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <%
+    String grade = (String) session.getAttribute("grade");
+    if(grade == null || !grade.equals("admin")){
+        response.sendRedirect(request.getContextPath() + "/customer/login.jsp");
+    } else {
+        System.out.println("grade: " + grade);
+    }
     request.setCharacterEncoding("UTF-8");
     String[] categories = request.getParameterValues("category");
     String[] teams = request.getParameterValues("team");
@@ -30,17 +40,17 @@
         }
     }
     if(pageString == null){
-        response.sendRedirect(request.getContextPath() + "/product/List.jsp?page=1" + params);
+        response.sendRedirect(request.getContextPath() + "/product/AdminProductList.jsp?page=1" + params);
         return;
     }
     try {
         pageNum = Long.parseLong(pageString);
         if(pageNum < 1){
-            response.sendRedirect(request.getContextPath() + "/product/List.jsp?page=1" + params);
+            response.sendRedirect(request.getContextPath() + "/product/AdminProductList.jsp?page=1" + params);
             return;
         }
     } catch(Exception e){
-        response.sendRedirect(request.getContextPath() + "/product/List.jsp?page=1" + params);
+        response.sendRedirect(request.getContextPath() + "/product/AdminProductList.jsp?page=1" + params);
         return;
     }
     ProductDao productDao = new ProductDao();
@@ -60,7 +70,10 @@
 <body>
 <div class="product-list-header">
     <h1>Products</h1>
-    <form action="<%= request.getContextPath() %>/product/List.jsp" method="get">
+    <a class="button" href="<%= request.getContextPath() %>/product/AdminProductAdd.jsp">
+        Add Product
+    </a>
+    <form action="<%= request.getContextPath() %>/product/AdminProductList.jsp" method="get">
         <input type="hidden" name="page" value="<%= pageNum %>">
         <div class="search-box-category">
             <details>
@@ -142,7 +155,7 @@
 </div>
 <div class="product-list">
 <c:forEach var="product" items="${productList}">
-    <a href="<%= request.getContextPath() %>/product/Detail.jsp?productId=${product.getPr_id()}">
+    <a href="<%= request.getContextPath() %>/product/AdminProductEdit.jsp?productId=${product.getPr_id()}">
         <div class="product">
             <img class="product-thum-img" src="<%= request.getContextPath() %>/primg/thum/${product.getPr_thum_img()}" alt="${product.getPr_name()}">
             <p class="truncate product-name">${product.getPr_name()}</p>
