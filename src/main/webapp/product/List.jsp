@@ -145,10 +145,9 @@
     <a href="<%= request.getContextPath() %>/product/Detail.jsp?productId=${product.getPr_id()}">
         <div class="product">
             <img class="product-thum-img" src="<%= request.getContextPath() %>/primg/thum/${product.getPr_thum_img()}" alt="${product.getPr_name()}">
-            <p>${product.getPr_name()}</p>
-            <p>${product.getCa_id()}</p>
-            <p>${product.getTm_id()}</p>
-            <p>${product.getTm_name()}</p>
+            <p class="truncate product-name">${product.getPr_name()}</p>
+            <p class="truncate product-category">${product.getCa_id()}</p>
+            <p class="truncate product-team">${product.getTm_name()}</p>
         </div>
     </a>
 </c:forEach>
