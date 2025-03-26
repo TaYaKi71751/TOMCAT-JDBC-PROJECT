@@ -16,14 +16,41 @@
     request.setCharacterEncoding("UTF-8");
     String[] categories = request.getParameterValues("category");
     String[] teams = request.getParameterValues("team");
+    String pageString = request.getParameter("page");
+    Long pageNum = null;
+    String params = "";
+    if(categories != null){
+        for(String category : categories){
+            params += "&category=" + category;
+        }
+    }
+    if(teams != null){
+        for(String team : teams){
+            params += "&team=" + team;
+        }
+    }
+    if(pageString == null){
+        response.sendRedirect(request.getContextPath() + "/product/List.jsp?page=1" + params);
+        return;
+    }
+    try {
+        pageNum = Long.parseLong(pageString);
+        if(pageNum < 1){
+            response.sendRedirect(request.getContextPath() + "/product/List.jsp?page=1" + params);
+            return;
+        }
+    } catch(Exception e){
+        response.sendRedirect(request.getContextPath() + "/product/List.jsp?page=1" + params);
+        return;
+    }
     ProductDao productDao = new ProductDao();
     TeamDao teamDao = new TeamDao();
     ArrayList<ProductDto> productList = new ArrayList<ProductDto>();
     ArrayList<TeamDto> teamList = teamDao.selectAll();
     if((categories == null || categories.length == 0) && (teams == null || teams.length == 0)){
-        productList = productDao.selectAll();
+        productList = productDao.selectAllByPage(pageNum);
     } else {
-        productList = productDao.selectByTeamsOrCategories(teams, categories);
+        productList = productDao.selectByTeamsOrCategoriesPage(teams, categories, pageNum);
     }
     session.setAttribute("teamList",teamList);
     session.setAttribute("productList", productList);
@@ -33,7 +60,8 @@
 <body>
 <div class="product-list-header">
     <h1>Products</h1>
-    <form action="<%= request.getContextPath() %>/product/List.jsp" method="post">
+    <form action="<%= request.getContextPath() %>/product/List.jsp" method="get">
+        <input type="hidden" name="page" value="<%= pageNum %>">
         <div class="search-box-category">
             <details>
                 <summary>Category</summary>
@@ -41,9 +69,11 @@
                     <div class="category-item">
                         <label for="Hat">Hat</label>
                         <input type="checkbox" name="category" value="Hat" <%
-                            for(String category : categories){
-                                if(category.equals("Hat")){
-                                    out.print("checked");
+                            if(categories != null){
+                                for(String category : categories){
+                                    if(category.equals("Hat")){
+                                        out.print("checked");
+                                    }
                                 }
                             }
                         %>>
@@ -51,9 +81,11 @@
                     <div class="category-item">
                         <label for="Beanie">Beanie</label>
                         <input type="checkbox" name="category" value="Beanie" <%
-                            for(String category : categories){
-                                if(category.equals("Beanie")){
-                                    out.print("checked");
+                            if (categories != null){
+                                for(String category : categories){
+                                    if(category.equals("Beanie")){
+                                        out.print("checked");
+                                    }
                                 }
                             }
                         %>>
@@ -61,21 +93,25 @@
                     <div class="category-item">
                         <label for="Season">Season</label>
                         <input type="checkbox" name="category" value="Season" <%
+                        if(categories != null){
                             for(String category : categories){
                                 if(category.equals("Season")){
                                     out.print("checked");
                                 }
                             }
+                        }
                         %>>
                     </div>
                     <div class="category-item">
                         <label for="BallCap">BallCap</label>
                         <input type="checkbox" name="category" value="BallCap" <%
+                        if(categories != null){
                             for(String category : categories){
                                 if(category.equals("BallCap")){
                                     out.print("checked");
                                 }
                             }
+                        }
                         %>>
                     </div>
             </details>
@@ -88,9 +124,11 @@
                         <div class="team-item">
                             <label for="${team.getTm_id()}">${team.getTm_name()}</label>
                             <input type="checkbox" name="team" value="${team.getTm_id()}" <% 
-                            for(String team : teams){
-                                if(team.equals(((TeamDto)pageContext.getAttribute("team")).getTm_id())){
-                                    out.print("checked");
+                            if(teams != null){
+                                for(String team : teams){
+                                    if(team.equals(((TeamDto)pageContext.getAttribute("team")).getTm_id())){
+                                        out.print("checked");
+                                    }
                                 }
                             }
                             %>>
@@ -113,5 +151,42 @@
     </div>
 </c:forEach>
 </div>
+<div class="page-nav">
+    <%
+    if(pageNum > 1){
+    %>
+    <a class="page-button" href="<%= request.getContextPath() %>/product/List.jsp?page=<%= pageNum - 1 %><%= params %>">Previous</a>
+    <%
+    }
+    %>
+    <label class="page-number" for="PageNumber"><%= pageNum %></label>
+
+    <%
+    String where = "";
+    if(categories != null && categories.length > 0){
+        where = " ( ca_id = \'" + categories[0] + "\'";
+        for(int i = 1; i < categories.length; i++){
+            where += " OR ca_id = \'" + categories[i] + "\'";
+        }
+        where += " ) ";
+    }
+    if(teams != null && teams.length > 0){
+        if(where.equals("")){
+            where = " ( tm_id = \'" + teams[0] + "\'";
+        } else {
+            where += " AND ( tm_id = \'" + teams[0] + "\'";
+        }
+        for(int i = 1; i < teams.length; i++){
+            where += " OR tm_id = \'" + teams[i] + "\'";
+        }
+        where += " ) ";
+    }
+    System.out.println(productDao.selectCount(where));
+    if(productDao.selectCount(where) > pageNum * 10){
+    %>
+    <a class="page-button" href="<%= request.getContextPath() %>/product/List.jsp?page=<%= pageNum + 1 %><%= params %>">Next</a>
+    <%
+    }
+    %>
 </body>
 </html>

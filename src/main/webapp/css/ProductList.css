@@ -11,12 +11,13 @@ body {
 .product-list {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
+    justify-content: left;
+    width: 100%;
 }
 .product {
     display: flex;
     flex-direction: column;
-    max-width: 400px;
+    max-width: 16vw;
     margin: 10px;
     padding: 10px;
     border: 1px solid #ccc;
@@ -24,5 +25,19 @@ body {
     background-color: #f9f9f9;
 }
 .product-thum-img {
-    width: 400px;
+    width: 16vw;
+}
+.page-nav {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    margin-top: 10px;
+}
+.page-number,.page-button {
+    text-decoration: none;
+    margin: 0 5px;
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
 }
