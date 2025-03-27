@@ -3,10 +3,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<%
-request.setCharacterEncoding("UTF-8");
-session.setAttribute("grade", "admin");
-%>
 <%@ page import="java.util.*" %>
 <%@ page import="java.time.*" %>
 <%@ page import="com.mlb.product.dao.*" %>
@@ -64,10 +60,17 @@ session.setAttribute("grade", "admin");
     }
     session.setAttribute("teamList",teamList);
     session.setAttribute("productList", productList);
+    if (pageNum > 1) {
+        if (productList.size() == 0) {
+            response.sendRedirect(request.getContextPath() + "/product/AdminProductList.jsp?page=" + (pageNum - 1) + params);
+            return;
+        }
+    }
     %>
     <title>MLB - Products</title>
 </head>
 <body>
+<jsp:include page="/topnavigator.jsp"></jsp:include>
 <div class="product-list-header">
     <h1>Products</h1>
     <a class="button" href="<%= request.getContextPath() %>/product/AdminProductAdd.jsp">
@@ -169,7 +172,7 @@ session.setAttribute("grade", "admin");
     <%
     if(pageNum > 1){
     %>
-    <a class="page-button" href="<%= request.getContextPath() %>/product/List.jsp?page=<%= pageNum - 1 %><%= params %>">Previous</a>
+    <a class="page-button" href="<%= request.getContextPath() %>/product/AdminProductList.jsp?page=<%= pageNum - 1 %><%= params %>">Previous</a>
     <%
     }
     %>
@@ -198,7 +201,7 @@ session.setAttribute("grade", "admin");
     System.out.println(productDao.selectCount(where));
     if(productDao.selectCount(where) > pageNum * 10){
     %>
-    <a class="page-button" href="<%= request.getContextPath() %>/product/List.jsp?page=<%= pageNum + 1 %><%= params %>">Next</a>
+    <a class="page-button" href="<%= request.getContextPath() %>/product/AdminProductList.jsp?page=<%= pageNum + 1 %><%= params %>">Next</a>
     <%
     }
     %>

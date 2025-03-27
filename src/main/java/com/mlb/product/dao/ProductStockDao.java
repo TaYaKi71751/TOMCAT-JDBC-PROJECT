@@ -57,8 +57,8 @@ public class ProductStockDao {
     public void update(ProductStockDto dto){
         String sql = "UPDATE product_stocks SET " 
         + "pr_id = " + dto.getPr_id() + " , " 
-        + "cl_id = " + dto.getCl_id() + " , "
-        + "sz_id = " + dto.getSz_id() + " , "
+        + "cl_id = \'" + dto.getCl_id() + "\' , "
+        + "sz_id = \'" + dto.getSz_id() + "\' , "
         + "quantity = " + dto.getQuantity() + " , "
         + "price = " + dto.getPrice()
         + " WHERE pr_st_id = " + dto.getPr_st_id();

@@ -375,4 +375,15 @@ public class ProductDao {
 		}
 		return list;
 	}
+	public void update(ProductDto dto){
+		String sql = "UPDATE products SET " + //
+						"tm_id = \'" + dto.getTm_id() + "\', " + //
+						"ca_id = \'" + dto.getCa_id() + "\', " + //
+						"pr_name = \'" + dto.getPr_name() + "\', " + //
+						// "pr_regdate = \'" + dto.getPr_regdate() + "\', " + //
+						"pr_thum_img = \'" + dto.getPr_thum_img() + "\', " + //
+						"pr_detail_img = \'" + dto.getPr_detail_img() + "\' " + //
+						"WHERE pr_id = " + dto.getPr_id();
+		DBConn.statementUpdate(sql);
+	}
 }

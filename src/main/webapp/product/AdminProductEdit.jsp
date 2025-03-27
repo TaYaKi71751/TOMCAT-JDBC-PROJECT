@@ -8,10 +8,6 @@
 <%@ page import="com.mlb.product.dto.*" %>
 <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/css/Font.css">
 <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/css/AdminProductEdit.css">
-<%
-    request.setCharacterEncoding("UTF-8");
-    session.setAttribute("grade", "admin");
-%>
 
 <html>
 <head>
@@ -44,13 +40,37 @@
         }
         TeamDao teamDao = new TeamDao();
         ArrayList<TeamDto> teamList = teamDao.selectAll();
+        ColorDao colorDao = new ColorDao();
+        ArrayList<ColorDto> colorList = colorDao.selectAll();
         pageContext.setAttribute("teamList", teamList);
+        pageContext.setAttribute("colorList", colorList);
         pageContext.setAttribute("product", product);
         pageContext.setAttribute("productStockList", productStockList);
     %>
     <title>MLB - AdminProductEdit</title>
+    <script>
+        function selectProductStock(productStockId){
+            let productStockIdElement = document.querySelector('input[name="productStockId"][value="' + productStockId + '"]');
+            let color = productStockIdElement.parentElement.parentElement.querySelector("label.product-color").id;
+            let size = productStockIdElement.parentElement.parentElement.querySelector("label.product-size").id;
+            let price = productStockIdElement.parentElement.parentElement.querySelector("label.product-price").id;
+            let quantity = productStockIdElement.parentElement.parentElement.querySelector("label.product-quantity").id;
+            try {
+                document.querySelector('.product-color > [selected="selected"]').removeAttribute("selected");
+            } catch(e){}
+            document.querySelector('.product-color > option[value="' + color + '"]').setAttribute("selected", "selected");
+            try {
+                document.querySelector('.product-size > [selected="selected"]').removeAttribute("selected");
+            } catch(e){}
+            document.querySelector('.product-size > option[value="' + size + '"]').setAttribute("selected", "selected");
+            document.querySelector("input.product-price").setAttribute("value", price);
+            document.querySelector("input.product-quantity").setAttribute("value", quantity);
+        }
+    </script>
 </head>
 <body>
+<jsp:include page="/topnavigator.jsp"></jsp:include>
+    <div class="product">
     <form action="" method="post">
         <h1>상품 수정</h1>
         <table>
@@ -58,91 +78,121 @@
                 <th>상품명</th>
                 <th>팀</th>
                 <th>카테고리</th>
+                <th>제품 이미지</th>
+                <th>설명 이미지</th>
+                <th>상품 등록 일자</th>
             </tr>
             <tr>
-                <td>${product.getPr_name()}</td>
-                <td>${product.getTm_name()}</td>
-                <td>${product.getCa_id()}</td>
+                <input class="product-id" type="hidden" name="productId" value="<%= product.getPr_id() %>">
+                <td><label class="product-name">${product.getPr_name()}</label></td>
+                <td><label class="product-team">${product.getTm_name()}</label></td>
+                <td><label class="product-category">${product.getCa_id()}</label></td>
+                <td><label class="product-thumbnail-image">${product.getPr_thum_img()}</label></td>
+                <td><label class="product-detail-image">${product.getPr_detail_img()}</label></td>
+                <td><label class="product-regdate">${product.getPr_regdate().toString()}</label></td>
             </tr>
             <tr>
                 <td><input class="product-name" type="text" name="productName" value="${product.getPr_name()}"></td>
                 <td>
                     <select class="product-team" name="teamId">
                     <c:forEach var="team" items="${teamList}">
-                        <option value="${team.getTm_id()}">${team.getTm_name()}</option>
+                        <option value="${team.getTm_id()}" <%
+                            if(product.getTm_id().equals(((TeamDto)pageContext.getAttribute("team")).getTm_id())){
+                                out.print("selected");
+                            }
+                        %>>${team.getTm_name()}</option>
                     </c:forEach>
                     </select>
                 </td>
                 <td>
                     <select class="product-category" name="categoryId">
-                        <option value="Season">Season</option>
-                        <option value="BallCap">BallCap</option>
-                        <option value="Hat">Hat</option>
-                        <option value="Beanie">Beanie</option>
+                        <option value="Season" <%
+                            if(product.getCa_id().equals("Season")){
+                                out.print("selected");
+                            }
+                        %>>Season</option>
+                        <option value="BallCap" <%
+                            if(product.getCa_id().equals("BallCap")){
+                                out.print("selected");
+                            }
+                        %>>BallCap</option>
+                        <option value="Hat" <%
+                            if(product.getCa_id().equals("Hat")){
+                                out.print("selected");
+                            }
+                        %>>Hat</option>
+                        <option value="Beanie" <%
+                            if(product.getCa_id().equals("Beanie")){
+                                out.print("selected");
+                            }
+                        %>>Beanie</option>
                     </select>
                 </td>
-                </table>
-        <table>
-            <tr>
-                <th>선택</th>
-                <th>색상</th>
-                <th>사이즈</th>
-                <th>가격</th>
-                <th>재고</th>
-                <th>제품 이미지</th>
-                <th>설명 이미지</th>
-            </tr>
-            <c:forEach var="productStock" items="${productStockList}">
-            <tr>
-                <td>
-                    <input class="product-id" type="hidden" name="productId" value="<%= product.getPr_id() %>">
-                    <input type="radio" name="productStockId" value="${productStock.getPr_st_id()}">
-                </td>
-                <td><label class="product-color" for="colorId">${productStock.getCl_name()}</label></td>
-                <td><label class="product-size" for="sizeId">${productStock.getSz_id()}</label></td>
-                <td><label class="product-price" for="price">${productStock.getPrice()}</label></td>
-                <td><label class="product-quantity" for="quantity">${productStock.getQuantity()}</label></td>
-                <td><label class="product-thumbnail-image" for="productThumbnailImage">${product.getPr_thum_img()}</label></td>
-                <td><label class="product-detail-image">${product.getPr_detail_img()}</label></td>
-            </tr>
-            </c:forEach>
-            <tr>
-                <td></td>
-                <td>
-                    <select class="product-color" name="colorId">
-                        <option value="WT">White</option>
-                        <option value="BLK">Black</option>
-                        <option value="BLE">Blue</option>
-                        <option value="RED">Red</option>
-                        <option value="GN">Green</option>
-                        <option value="PK">Pink</option>
-                        <option value="BG">Beige</option>
-                        <option value="BR">Brown</option>
-                        <option value="GR">Gray</option>
-                    </select>
-                </td>
-                <td>
-                    <select class="product-size" name="sizeId">
-                        <option value="XS">XS</option>
-                        <option value="S">S</option>
-                        <option value="M">M</option>
-                        <option value="L">L</option>
-                        <option value="XL">XL</option>
-                        <option value="XXL">XXL</option>
-                    </select>
-                </td>
-                <td><input class="product-price" type="number" name="price" value="0"></td>
-                <td><input class="product-quantity" type="number" name="quantity" value="0"></td>
-                <td><input class="product-thumbnail-image" type="text" name="productThumbnailImage" value=""></td>
-                <td><input class="product-detail-image" type="text" name="productDetailImage" value=""></td>
+                <td><input class="product-thumbnail-image" type="text" name="productThumbnailImage" value="${product.getPr_thum_img()}"></td>
+                <td><input class="product-detail-image" type="text" name="productDetailImage" value="${product.getPr_detail_img()}"></td>
             </tr>
             <tr>
                 <td colspan="8">
-                    <input type="submit" value="재고 정보 수정" formaction="<%= request.getContextPath() %>/product/AdminProductStockUpdate.jsp">
-                    <input type="submit" value="재고 정보 삭제" formaction="<%= request.getContextPath() %>/product/AdminProductStockDelete.jsp">
+                    <input type="submit" value="상품 정보 수정" formaction="<%= request.getContextPath() %>/product/AdminProductUpdate.jsp">
+                    <input type="submit" value="상품 정보 삭제" formaction="<%= request.getContextPath() %>/product/AdminProductDelete.jsp">
                 </td>
-            </tr>
         </table>
     </form>
+    </div>
+    <div class="product-stock">
+        <h1>재고 수정</h1>
+        <form action="" method="post">
+            <input class="product-id" type="hidden" name="productId" value="<%= product.getPr_id() %>">
+            <table>
+                <tr>
+                    <th>선택</th>
+                    <th>색상</th>
+                    <th>사이즈</th>
+                    <th>가격</th>
+                    <th>재고</th>
+                </tr>
+                <c:forEach var="productStock" items="${productStockList}">
+                <tr>
+                    <td>
+                        <input type="radio" name="productStockId" value="${productStock.getPr_st_id()}" onclick="selectProductStock(${productStock.getPr_st_id()})">
+                    </td>
+                    <td><label class="product-color" id="${productStock.getCl_id()}">${productStock.getCl_name()}</label></td>
+                    <td><label class="product-size" id="${productStock.getSz_id()}">${productStock.getSz_id()}</label></td>
+                    <td><label class="product-price" id="${productStock.getPrice()}">${productStock.getPrice()}</label></td>
+                    <td><label class="product-quantity" id="${productStock.getQuantity()}">${productStock.getQuantity()}</label></td>
+                </tr>
+                </c:forEach>
+                <tr>
+                    <td></td>
+                    <td>
+                        <select class="product-color" name="colorId">
+                            <c:forEach var="color" items="${colorList}">
+                                <option value="${color.getCl_id()}">${color.getCl_name()}</option>
+                            </c:forEach>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="product-size" name="sizeId">
+                            <option value="XS">XS</option>
+                            <option value="S">S</option>
+                            <option value="M">M</option>
+                            <option value="L">L</option>
+                            <option value="XL">XL</option>
+                            <option value="XXL">XXL</option>
+                        </select>
+                    </td>
+                    <td><input class="product-price" type="number" name="price" value="0"></td>
+                    <td><input class="product-quantity" type="number" name="quantity" value="0"></td>
+                </tr>
+                <tr>
+                    <td colspan="8">
+                        <input type="submit" value="재고 정보 추가" formaction="<%= request.getContextPath() %>/product/AdminProductStockInsert.jsp">
+                        <input type="submit" value="재고 정보 수정" formaction="<%= request.getContextPath() %>/product/AdminProductStockUpdate.jsp">
+                        <input type="submit" value="재고 정보 삭제" formaction="<%= request.getContextPath() %>/product/AdminProductStockDelete.jsp">
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
 </body>
 </html>

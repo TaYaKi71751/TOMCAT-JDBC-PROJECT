@@ -13,6 +13,20 @@ public class ProductDto {
 	private String pr_thum_img;
 	private String pr_detail_img;
 
+	public ProductDto() {
+	}
+
+	public ProductDto(Long pr_id, String tm_id, String ca_id, String pr_name, LocalDateTime pr_regdate,
+			String pr_thum_img, String pr_detail_img) {
+		this.pr_id = pr_id;
+		this.tm_id = tm_id;
+		this.ca_id = ca_id;
+		this.pr_name = pr_name;
+		this.pr_regdate = pr_regdate;
+		this.pr_thum_img = pr_thum_img;
+		this.pr_detail_img = pr_detail_img;
+	}
+
 	public Long getPr_id() {
 		return pr_id;
 	}

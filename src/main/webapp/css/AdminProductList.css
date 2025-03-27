@@ -2,14 +2,14 @@ body {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    width: 100%;
+    width: 98%;
 }
 * {
     text-decoration: none;
     color: #333;
 }
 .product-list-header {
-    width: 100vw;
+    width: 100%;
     padding: 10px;
     background-color: #f9f9f9;
     border-bottom: 1px solid #ccc;
