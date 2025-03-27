@@ -64,4 +64,17 @@ public class ProductStockDao {
         + " WHERE pr_st_id = " + dto.getPr_st_id();
         DBConn.statementUpdate(sql);
     }
+    public void insert(ProductStockDto dto){
+        String sql = "INSERT INTO product_stocks(pr_id, cl_id, sz_id, quantity, price) VALUES("
+        + dto.getPr_id() + " , "
+        + "\'" + dto.getCl_id() + "\' , "
+        + "\'" + dto.getSz_id() + "\' , "
+        + dto.getQuantity() + " , "
+        + dto.getPrice() + ")";
+        DBConn.statementUpdate(sql);
+    }
+    public void delete(Long pr_st_id){
+        String sql = "DELETE FROM product_stocks WHERE pr_st_id = " + pr_st_id;
+        DBConn.statementUpdate(sql);
+    }
 }

@@ -386,4 +386,27 @@ public class ProductDao {
 						"WHERE pr_id = " + dto.getPr_id();
 		DBConn.statementUpdate(sql);
 	}
+	public void insert(ProductDto dto){
+		String sql = "INSERT INTO products (tm_id, ca_id, pr_name, pr_regdate, pr_thum_img, pr_detail_img) " + //
+						"VALUES (\'" + dto.getTm_id() + "\', \'" + dto.getCa_id() + "\', \'" + dto.getPr_name() + "\', " + //
+						"SYSDATE, \'" + dto.getPr_thum_img() + "\', \'" + dto.getPr_detail_img() + "\')";
+		DBConn.statementUpdate(sql);
+	}
+	public void delete(long pr_id){
+		String sql = "DELETE FROM products WHERE pr_id = " + pr_id;
+		DBConn.statementUpdate(sql);
+	}
+
+	public Long getMaxProductId(){
+		String sql = "SELECT MAX(pr_id) FROM products";
+		ResultSet rs = DBConn.statementQuery(sql);
+		try {
+			if(rs.next()) {
+				return rs.getLong(1);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return 0l;
+	}
 }

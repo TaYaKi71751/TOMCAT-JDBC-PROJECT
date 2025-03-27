@@ -10,22 +10,19 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>MLB - AdminProductStockUpdate</title>
+    <title>MLB - AdminProductDelete</title>
 </head>
 <body>
+<jsp:include page="/topnavigator.jsp"></jsp:include>
 <%
     String grade = (String) session.getAttribute("grade");
     if(grade == null || !grade.equals("admin")){
         response.sendRedirect(request.getContextPath() + "/customer/login.jsp");
+        return;
     } else {
         System.out.println("grade: " + grade);
     }
     String productIdString = request.getParameter("productId");
-    String productName = request.getParameter("productName");
-    String teamId = request.getParameter("teamId");
-    String category = request.getParameter("categoryId");
-    String productThumbnailImage = request.getParameter("productThumbnailImage");
-    String productDetailImage = request.getParameter("productDetailImage");
     Long productId = null;
     try {
         productId = Long.parseLong(productIdString);
@@ -34,20 +31,13 @@
         return;
     }
     ProductDao productDao = new ProductDao();
-    ProductDto product = new ProductDto(
-        productId,
-        teamId,
-        category,
-        productName,
-        null,
-        productThumbnailImage,
-        productDetailImage
-    );
-    productDao.update(product);
-
-    out.println("<h1>상품 수정 완료</h1>");
-    Thread.sleep(1000);
-    response.sendRedirect(request.getContextPath() + "/product/AdminProductEdit.jsp?productId=" + productId);
+    ProductStockDao productStockDao = new ProductStockDao();
+    ArrayList<ProductStockDto> productStockList = productStockDao.selectByProductId(productId);
+    for(ProductStockDto productStock : productStockList){
+        productStockDao.delete(productStock.getPr_st_id());
+    }
+    productDao.delete(productId);
+    response.sendRedirect(request.getContextPath() + "/product/AdminProductList.jsp");
 %>
 
 </body>

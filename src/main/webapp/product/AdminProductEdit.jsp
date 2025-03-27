@@ -16,6 +16,7 @@
         String grade = (String) session.getAttribute("grade");
         if(grade == null || !grade.equals("admin")){
             response.sendRedirect(request.getContextPath() + "/customer/login.jsp");
+            return;
         } else {
             System.out.println("grade: " + grade);
         }
@@ -29,7 +30,8 @@
         }
         ProductDao productDao = new ProductDao();
         ProductDto product = productDao.selectByProductId(productId);
-        if(product == null){
+        System.out.println(product);
+        if(product == null || product.getPr_id() == null){
             response.sendRedirect(request.getContextPath() + "/product/AdminProductList.jsp");
             return;
         }
@@ -92,9 +94,9 @@
                 <td><label class="product-regdate">${product.getPr_regdate().toString()}</label></td>
             </tr>
             <tr>
-                <td><input class="product-name" type="text" name="productName" value="${product.getPr_name()}"></td>
+                <td><input class="product-name" type="text" name="productName" value="${product.getPr_name()}" required></td>
                 <td>
-                    <select class="product-team" name="teamId">
+                    <select class="product-team" name="teamId" required>
                     <c:forEach var="team" items="${teamList}">
                         <option value="${team.getTm_id()}" <%
                             if(product.getTm_id().equals(((TeamDto)pageContext.getAttribute("team")).getTm_id())){
@@ -105,7 +107,7 @@
                     </select>
                 </td>
                 <td>
-                    <select class="product-category" name="categoryId">
+                    <select class="product-category" name="categoryId" required>
                         <option value="Season" <%
                             if(product.getCa_id().equals("Season")){
                                 out.print("selected");
@@ -128,13 +130,13 @@
                         %>>Beanie</option>
                     </select>
                 </td>
-                <td><input class="product-thumbnail-image" type="text" name="productThumbnailImage" value="${product.getPr_thum_img()}"></td>
-                <td><input class="product-detail-image" type="text" name="productDetailImage" value="${product.getPr_detail_img()}"></td>
+                <td><input class="product-thumbnail-image" type="text" name="productThumbnailImage" value="${product.getPr_thum_img()}" required></td>
+                <td><input class="product-detail-image" type="text" name="productDetailImage" value="${product.getPr_detail_img()}" required></td>
             </tr>
             <tr>
                 <td colspan="8">
-                    <input type="submit" value="상품 정보 수정" formaction="<%= request.getContextPath() %>/product/AdminProductUpdate.jsp">
-                    <input type="submit" value="상품 정보 삭제" formaction="<%= request.getContextPath() %>/product/AdminProductDelete.jsp">
+                    <input type="submit" value="상품 정보 수정" formaction="<%= request.getContextPath() %>/product/AdminProductUpdateDB.jsp">
+                    <input type="submit" value="상품 정보 삭제" formaction="<%= request.getContextPath() %>/product/AdminProductDeleteDB.jsp">
                 </td>
         </table>
     </form>
@@ -165,14 +167,14 @@
                 <tr>
                     <td></td>
                     <td>
-                        <select class="product-color" name="colorId">
+                        <select class="product-color" name="colorId" required>
                             <c:forEach var="color" items="${colorList}">
                                 <option value="${color.getCl_id()}">${color.getCl_name()}</option>
                             </c:forEach>
                         </select>
                     </td>
                     <td>
-                        <select class="product-size" name="sizeId">
+                        <select class="product-size" name="sizeId" required>
                             <option value="XS">XS</option>
                             <option value="S">S</option>
                             <option value="M">M</option>
@@ -181,14 +183,14 @@
                             <option value="XXL">XXL</option>
                         </select>
                     </td>
-                    <td><input class="product-price" type="number" name="price" value="0"></td>
-                    <td><input class="product-quantity" type="number" name="quantity" value="0"></td>
+                    <td><input class="product-price" type="number" name="price" value="0" required></td>
+                    <td><input class="product-quantity" type="number" name="quantity" value="0" required></td>
                 </tr>
                 <tr>
                     <td colspan="8">
-                        <input type="submit" value="재고 정보 추가" formaction="<%= request.getContextPath() %>/product/AdminProductStockInsert.jsp">
-                        <input type="submit" value="재고 정보 수정" formaction="<%= request.getContextPath() %>/product/AdminProductStockUpdate.jsp">
-                        <input type="submit" value="재고 정보 삭제" formaction="<%= request.getContextPath() %>/product/AdminProductStockDelete.jsp">
+                        <input type="submit" value="재고 정보 추가" formaction="<%= request.getContextPath() %>/product/AdminProductStockInsertDB.jsp">
+                        <input type="submit" value="재고 정보 수정" formaction="<%= request.getContextPath() %>/product/AdminProductStockUpdateDB.jsp">
+                        <input type="submit" value="재고 정보 삭제" formaction="<%= request.getContextPath() %>/product/AdminProductStockDeleteDB.jsp">
                     </td>
                 </tr>
             </table>

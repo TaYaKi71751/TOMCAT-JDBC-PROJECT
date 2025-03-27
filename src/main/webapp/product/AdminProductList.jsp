@@ -16,6 +16,7 @@
     String grade = (String) session.getAttribute("grade");
     if(grade == null || !grade.equals("admin")){
         response.sendRedirect(request.getContextPath() + "/customer/login.jsp");
+        return;
     } else {
         System.out.println("grade: " + grade);
     }
