@@ -198,7 +198,7 @@ function logprocess(action, id = "", pw = "") {
     }
 
     // AJAX 요청
-    fetch("<%= request.getContextPath() %>tempAuth.jsp", {
+    fetch("<%= request.getContextPath() %>/tempAuth.jsp", {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: params.toString()
