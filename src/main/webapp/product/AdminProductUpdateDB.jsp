@@ -15,6 +15,7 @@
 <body>
 <jsp:include page="/topnavigator.jsp"></jsp:include>
 <%
+    request.setCharacterEncoding("UTF-8");
     String grade = (String) session.getAttribute("grade");
     if(grade == null || !grade.equals("admin")){
         response.sendRedirect(request.getContextPath() + "/customer/login.jsp");
@@ -45,6 +46,11 @@
         productThumbnailImage,
         productDetailImage
     );
+    ArrayList<ProductDto> productList = productDao.searchWithoutProductId(product);
+    if(productList.size() > 0){
+        response.sendRedirect(request.getContextPath() + "/product/AdminProductEdit.jsp?productId=" + productId + "&error=exist");
+        return;
+    }
     productDao.update(product);
 
     response.sendRedirect(request.getContextPath() + "/product/AdminProductEdit.jsp?productId=" + productId);

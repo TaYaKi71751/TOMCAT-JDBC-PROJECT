@@ -397,6 +397,44 @@ public class ProductDao {
 		DBConn.statementUpdate(sql);
 	}
 
+	public ArrayList<ProductDto> searchWithoutProductId(ProductDto dto){
+		ArrayList<ProductDto> list = new ArrayList<ProductDto>();
+		String sql = "SELECT * FROM products WHERE"; //
+		if(dto.getTm_id() != null && dto.getTm_id().length() > 0){
+			sql += " tm_id = \'" + dto.getTm_id() + "\' AND ";
+		}
+		if(dto.getCa_id() != null && dto.getCa_id().length() > 0){
+			sql += " ca_id = \'" + dto.getCa_id() + "\' AND ";
+		}
+		if(dto.getPr_name() != null && dto.getPr_name().length() > 0){
+			sql += " pr_name = \'" + dto.getPr_name() + "\' AND ";
+		}
+		if(dto.getPr_thum_img() != null && dto.getPr_thum_img().length() > 0){
+			sql += " pr_thum_img = \'" + dto.getPr_thum_img() + "\' AND ";
+		}
+		if(dto.getPr_detail_img() != null && dto.getPr_detail_img().length() > 0){
+			sql += " pr_detail_img = \'" + dto.getPr_detail_img() + "\' AND ";
+		}
+		sql = sql.substring(0, sql.length() - 5);
+		ResultSet rs = DBConn.statementQuery(sql);
+		try {
+			while(rs.next()) {
+				ProductDto productDto = new ProductDto();
+				productDto.setPr_id(rs.getLong("pr_id"));
+				productDto.setTm_id(rs.getString("tm_id"));
+				productDto.setCa_id(rs.getString("ca_id"));
+				productDto.setPr_name(rs.getString("pr_name"));
+				productDto.setPr_regdate(rs.getTimestamp("pr_regdate").toLocalDateTime());
+				productDto.setPr_thum_img(rs.getString("pr_thum_img"));
+				productDto.setPr_detail_img(rs.getString("pr_detail_img"));
+				list.add(productDto);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+
 	public Long getMaxProductId(){
 		String sql = "SELECT MAX(pr_id) FROM products";
 		ResultSet rs = DBConn.statementQuery(sql);

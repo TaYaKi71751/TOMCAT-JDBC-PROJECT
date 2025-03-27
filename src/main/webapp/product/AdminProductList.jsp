@@ -13,6 +13,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <%
+    request.setCharacterEncoding("UTF-8");
     String grade = (String) session.getAttribute("grade");
     if(grade == null || !grade.equals("admin")){
         response.sendRedirect(request.getContextPath() + "/customer/login.jsp");
@@ -20,7 +21,6 @@
     } else {
         System.out.println("grade: " + grade);
     }
-    request.setCharacterEncoding("UTF-8");
     String[] categories = request.getParameterValues("category");
     String[] teams = request.getParameterValues("team");
     String pageString = request.getParameter("page");

@@ -13,6 +13,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <%
+        request.setCharacterEncoding("UTF-8");
         String grade = (String) session.getAttribute("grade");
         if(grade == null || !grade.equals("admin")){
             response.sendRedirect(request.getContextPath() + "/customer/login.jsp");
@@ -20,12 +21,19 @@
         } else {
             System.out.println("grade: " + grade);
         }
+        String error = request.getParameter("error");
+        if(error != null && error.equals("exist")){
+            out.print("<script>alert('이미 존재하는 상품입니다.');</script>");
+        }
+        if(error != null && error.equals("invalid_input")){
+            out.print("<script>alert('입력이 올바르지 않습니다.');</script>");
+        }
         String productIdString = request.getParameter("productId");
         Long productId = null;
         try {
             productId = Long.parseLong(productIdString);
         } catch(Exception e){
-            response.sendRedirect(request.getContextPath() + "/product/List.jsp");
+            response.sendRedirect(request.getContextPath() + "/product/AdminProductList.jsp");
             return;
         }
         ProductDao productDao = new ProductDao();
@@ -135,8 +143,8 @@
             </tr>
             <tr>
                 <td colspan="8">
-                    <input type="submit" value="상품 정보 수정" formaction="<%= request.getContextPath() %>/product/AdminProductUpdateDB.jsp">
-                    <input type="submit" value="상품 정보 삭제" formaction="<%= request.getContextPath() %>/product/AdminProductDeleteDB.jsp">
+                    <input class="button" type="submit" value="상품 정보 수정" formaction="<%= request.getContextPath() %>/product/AdminProductUpdateDB.jsp">
+                    <input class="button" type="submit" value="상품 정보 삭제" formaction="<%= request.getContextPath() %>/product/AdminProductDeleteDB.jsp">
                 </td>
         </table>
     </form>
@@ -188,9 +196,9 @@
                 </tr>
                 <tr>
                     <td colspan="8">
-                        <input type="submit" value="재고 정보 추가" formaction="<%= request.getContextPath() %>/product/AdminProductStockInsertDB.jsp">
-                        <input type="submit" value="재고 정보 수정" formaction="<%= request.getContextPath() %>/product/AdminProductStockUpdateDB.jsp">
-                        <input type="submit" value="재고 정보 삭제" formaction="<%= request.getContextPath() %>/product/AdminProductStockDeleteDB.jsp">
+                        <input class="button" type="submit" value="재고 정보 추가" formaction="<%= request.getContextPath() %>/product/AdminProductStockInsertDB.jsp">
+                        <input class="button" type="submit" value="재고 정보 수정" formaction="<%= request.getContextPath() %>/product/AdminProductStockUpdateDB.jsp">
+                        <input class="button" type="submit" value="재고 정보 삭제" formaction="<%= request.getContextPath() %>/product/AdminProductStockDeleteDB.jsp">
                     </td>
                 </tr>
             </table>

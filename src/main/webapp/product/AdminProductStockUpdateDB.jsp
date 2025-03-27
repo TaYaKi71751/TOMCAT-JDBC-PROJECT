@@ -16,6 +16,7 @@
 <body>
 <jsp:include page="/topnavigator.jsp"></jsp:include>
 <%
+    request.setCharacterEncoding("UTF-8");
     String grade = (String) session.getAttribute("grade");
     if(grade == null || !grade.equals("admin")){
         response.sendRedirect(request.getContextPath() + "/customer/login.jsp");
@@ -39,11 +40,26 @@
         price = Long.parseLong(priceString);
         quantity = Long.parseLong(quantityString);
     } catch(Exception e){
-        response.sendRedirect(request.getContextPath() + "/product/AdminProductList.jsp");
+        response.sendRedirect(request.getContextPath() + "/product/AdminProductEdit.jsp?productId=" + productId + "&error=invalid_input");
         return;
     }
     ProductStockDao productStockDao = new ProductStockDao();
     ProductStockDto productStock = new ProductStockDto(
+        productStockId,
+        productId,
+        colorId,
+        sizeId,
+        null,
+        null
+    );
+    ArrayList<ProductStockDto> productStockList = productStockDao.searchWithoutProductStockId(productStock);
+    for(ProductStockDto ps : productStockList){
+        if(ps.getQuantity() == quantity && ps.getPrice() == price){
+            response.sendRedirect(request.getContextPath() + "/product/AdminProductEdit.jsp?productId=" + productId + "&error=exist");
+            return;
+        }
+    }
+    productStock = new ProductStockDto(
         productStockId,
         productId,
         colorId,

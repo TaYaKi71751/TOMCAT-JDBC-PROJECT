@@ -7,18 +7,23 @@
 <%@ page import="com.mlb.product.dao.*" %>
 <%@ page import="com.mlb.product.dto.*" %>
 <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/css/Font.css">
-<link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/css/AdminProductEdit.css">
+<link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/css/AdminProductAdd.css">
 
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <%
+        request.setCharacterEncoding("UTF-8");
         String grade = (String) session.getAttribute("grade");
         if(grade == null || !grade.equals("admin")){
             response.sendRedirect(request.getContextPath() + "/customer/login.jsp");
             return;
         } else {
             System.out.println("grade: " + grade);
+        }
+        String error = request.getParameter("error");
+        if(error != null && error.equals("exist")){
+            out.println("<script>alert('이미 존재하는 상품입니다.');</script>");
         }
         ProductDao productDao = new ProductDao();
         TeamDao teamDao = new TeamDao();

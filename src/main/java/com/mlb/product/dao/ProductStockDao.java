@@ -77,4 +77,41 @@ public class ProductStockDao {
         String sql = "DELETE FROM product_stocks WHERE pr_st_id = " + pr_st_id;
         DBConn.statementUpdate(sql);
     }
+
+    public ArrayList<ProductStockDto> searchWithoutProductStockId(ProductStockDto dto){
+        ArrayList<ProductStockDto> list = new ArrayList<ProductStockDto>();
+        String sql = "SELECT * FROM product_stocks WHERE";
+        if(dto.getPr_id() != null){
+            sql += " pr_id = " + dto.getPr_id() + " AND ";
+        }
+        if(dto.getCl_id() != null){
+            sql += " cl_id = \'" + dto.getCl_id() + "\' AND ";
+        }
+        if(dto.getSz_id() != null){
+            sql += " sz_id = \'" + dto.getSz_id() + "\' AND ";
+        }
+        if(dto.getQuantity() != null){
+            sql += " quantity = " + dto.getQuantity() + " AND ";
+        }
+        if(dto.getPrice() != null){
+            sql += " price = " + dto.getPrice() + " AND ";
+        }
+        sql = sql.substring(0, sql.length() - 5);
+        ResultSet rs = DBConn.statementQuery(sql);
+        try {
+            while(rs.next()) {
+                ProductStockDto productStockDto = new ProductStockDto();
+                productStockDto.setPr_st_id(rs.getLong("pr_st_id"));
+                productStockDto.setPr_id(rs.getLong("pr_id"));
+                productStockDto.setCl_id(rs.getString("cl_id"));
+                productStockDto.setSz_id(rs.getString("sz_id"));
+                productStockDto.setQuantity(rs.getLong("quantity"));
+                productStockDto.setPrice(rs.getLong("price"));
+                list.add(productStockDto);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
 }

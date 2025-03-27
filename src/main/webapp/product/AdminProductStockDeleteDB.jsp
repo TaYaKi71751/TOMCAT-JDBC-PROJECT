@@ -16,6 +16,7 @@
 <body>
 <jsp:include page="/topnavigator.jsp"></jsp:include>
 <%
+    request.setCharacterEncoding("UTF-8");
     String grade = (String) session.getAttribute("grade");
     if(grade == null || !grade.equals("admin")){
         response.sendRedirect(request.getContextPath() + "/customer/login.jsp");
@@ -31,7 +32,7 @@
         productId = Long.parseLong(productIdString);
         productStockId = Long.parseLong(productStockIdString);
     } catch(Exception e){
-        response.sendRedirect(request.getContextPath() + "/product/AdminProductList.jsp");
+        response.sendRedirect(request.getContextPath() + "/product/AdminProductEdit.jsp?productId=" + productId + "&error=invalid_input");
         return;
     }
     ProductStockDao productStockDao = new ProductStockDao();
