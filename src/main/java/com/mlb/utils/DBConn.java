@@ -7,9 +7,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class DBConn {
-	private DBConn() {
-	}
-	
 	private static Connection dbConn=null;
 	private static Statement st=null;
 	private static ResultSet rs=null;
