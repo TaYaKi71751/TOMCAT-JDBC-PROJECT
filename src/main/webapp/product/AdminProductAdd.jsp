@@ -33,7 +33,7 @@
         pageContext.setAttribute("teamList", teamList);
         pageContext.setAttribute("colorList", colorList);
     %>
-    <title>MLB - AdminProductEdit</title>
+    <title>MLB - AdminProductAdd</title>
 </head>
 <body>
 <jsp:include page="/topnavigator.jsp"></jsp:include>

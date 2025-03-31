@@ -68,7 +68,7 @@
         }
     }
     %>
-    <title>MLB - Products</title>
+    <title>MLB - AdminProductList</title>
 </head>
 <body>
 <jsp:include page="/topnavigator.jsp"></jsp:include>
