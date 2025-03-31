@@ -47,7 +47,6 @@
                 <th>카테고리</th>
                 <th>제품 이미지</th>
                 <th>설명 이미지</th>
-                <th>상품 등록 일자</th>
             </tr>
             <tr>
                 <td><input class="product-name" type="text" name="productName" value="" required></td>
