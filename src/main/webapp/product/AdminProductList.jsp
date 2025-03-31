@@ -68,22 +68,32 @@
         }
     }
     %>
+    <script>
+        function toggle(element) {
+            var checkbox = element.querySelector('input[type="checkbox"]');
+            if (checkbox) {
+                checkbox.checked = !checkbox.checked;
+            }
+        }
+    </script>
     <title>MLB - AdminProductList</title>
 </head>
 <body>
 <jsp:include page="/topnavigator.jsp"></jsp:include>
 <div class="product-list-header">
+    <div style="width: 95%">
     <h1>Products</h1>
-    <a class="button" href="<%= request.getContextPath() %>/product/AdminProductAdd.jsp">
+    <div style="width: 90%">
+    <a class="add-product-button" href="<%= request.getContextPath() %>/product/AdminProductAdd.jsp">
         Add Product
     </a>
-    <form action="<%= request.getContextPath() %>/product/AdminProductList.jsp" method="get">
+    <form class="search-box" action="<%= request.getContextPath() %>/product/AdminProductList.jsp" method="get">
         <input type="hidden" name="page" value="<%= pageNum %>">
         <div class="search-box-category">
             <details>
                 <summary>Category</summary>
                 <div class="category-list">
-                    <div class="category-item">
+                    <div class="category-item" onclick="toggle(this)">
                         <label for="Hat">Hat</label>
                         <input type="checkbox" name="category" value="Hat" <%
                             if(categories != null){
@@ -95,7 +105,7 @@
                             }
                         %>>
                     </div>
-                    <div class="category-item">
+                    <div class="category-item" onclick="toggle(this)">
                         <label for="Beanie">Beanie</label>
                         <input type="checkbox" name="category" value="Beanie" <%
                             if (categories != null){
@@ -107,7 +117,7 @@
                             }
                         %>>
                     </div>
-                    <div class="category-item">
+                    <div class="category-item" onclick="toggle(this)">
                         <label for="Season">Season</label>
                         <input type="checkbox" name="category" value="Season" <%
                         if(categories != null){
@@ -119,7 +129,7 @@
                         }
                         %>>
                     </div>
-                    <div class="category-item">
+                    <div class="category-item" onclick="toggle(this)">
                         <label for="BallCap">BallCap</label>
                         <input type="checkbox" name="category" value="BallCap" <%
                         if(categories != null){
@@ -138,7 +148,7 @@
                 <summary>Team</summary>
                 <div class="team-list">
                     <c:forEach var="team" items="${teamList}">
-                        <div class="team-item">
+                        <div class="team-item" onclick="toggle(this)">
                             <label for="${team.getTm_id()}">${team.getTm_name()}</label>
                             <input type="checkbox" name="team" value="${team.getTm_id()}" <% 
                             if(teams != null){
@@ -154,8 +164,10 @@
                 </div>
             </details>
         </div>
-        <input type="submit" value="Search">
+        <input class="search" type="submit" value="Search">
     </form>
+    </div>
+    </div>
 </div>
 <div class="product-list">
 <c:forEach var="product" items="${productList}">
