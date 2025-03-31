@@ -50,24 +50,24 @@
                 <th>상품 등록 일자</th>
             </tr>
             <tr>
-                <td><input class="product-name" type="text" name="productName" value="${product.getPr_name()}"></td>
+                <td><input class="product-name" type="text" name="productName" value="" required></td>
                 <td>
-                    <select class="product-team" name="teamId">
+                    <select class="product-team" name="teamId" required>
                     <c:forEach var="team" items="${teamList}">
                         <option value="${team.getTm_id()}">${team.getTm_name()}</option>
                     </c:forEach>
                     </select>
                 </td>
                 <td>
-                    <select class="product-category" name="categoryId">
+                    <select class="product-category" name="categoryId" required>
                         <option value="Season">Season</option>
                         <option value="BallCap">BallCap</option>
                         <option value="Hat">Hat</option>
                         <option value="Beanie">Beanie</option>
                     </select>
                 </td>
-                <td><input class="product-thumbnail-image" type="text" name="productThumbnailImage" value=""></td>
-                <td><input class="product-detail-image" type="text" name="productDetailImage" value=""></td>
+                <td><input class="product-thumbnail-image" type="text" name="productThumbnailImage" value="" required></td>
+                <td><input class="product-detail-image" type="text" name="productDetailImage" value="" required></td>
             </tr>
             <tr>
                 <td colspan="8">

@@ -199,7 +199,6 @@
         }
         where += " ) ";
     }
-    System.out.println(productDao.selectCount(where));
     if(productDao.selectCount(where) > pageNum * 10){
     %>
     <a class="page-button" href="<%= request.getContextPath() %>/product/AdminProductList.jsp?page=<%= pageNum + 1 %><%= params %>">Next</a>
