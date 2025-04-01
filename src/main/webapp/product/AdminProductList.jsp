@@ -56,12 +56,20 @@
     ArrayList<TeamDto> teamList = teamDao.selectAll();
     if((categories == null || categories.length == 0) && (teams == null || teams.length == 0)){
         productList = productDao.selectAllByPage(pageNum);
-    } else {
+    }
+    if((categories != null && categories.length > 0) && (teams != null && teams.length > 0)){
         productList = productDao.selectByTeamsOrCategoriesPage(teams, categories, pageNum);
+    }
+    if((categories!= null && categories.length > 0) && (teams== null || teams.length == 0)){
+        productList = productDao.selectByCategoriesPage(categories, pageNum);
+    }
+    if((teams!= null && teams.length > 0) && (categories== null || categories.length == 0)){
+        productList = productDao.selectByTeamsPage(teams, pageNum);
     }
     session.setAttribute("teamList",teamList);
     session.setAttribute("productList", productList);
     if (pageNum > 1) {
+        System.out.println(productList.size());
         if (productList.size() == 0) {
             response.sendRedirect(request.getContextPath() + "/product/AdminProductList.jsp?page=" + (pageNum - 1) + params);
             return;

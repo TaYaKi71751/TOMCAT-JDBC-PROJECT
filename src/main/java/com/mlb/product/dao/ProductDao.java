@@ -53,20 +53,10 @@ public class ProductDao {
 		if(page < 1 || page > count / 10 + 1){
 			return list;
 		}
-		String sql = "WITH " + //
-						"PR_RESULT AS ( " + //
-						"select " + //
-						"ROWNUM as NO, " + //
-						"P.pr_id, " + //
-						"P.tm_id, " + //
-						"P.ca_id," + //
-						"P.pr_name, " + //
-						"P.pr_regdate, " + //
-						"P.pr_thum_img, " + //
-						"P.pr_detail_img " + //
-						"from products P ORDER BY P.pr_id desc ) " + //
-						"SELECT * FROM PR_RESULT " + //
-						"WHERE (NO BETWEEN " + (((page - 1) * 10) + 1) + " AND " + (page * 10) + ")";
+		String sql = "WITH PR_DESC AS ( select P.pr_id, P.tm_id, P.ca_id,P.pr_name, P.pr_regdate, P.pr_thum_img, P.pr_detail_img from products P ORDER BY P.pr_id desc ) ,\n" + //
+						"PR AS ( select ROWNUM as NUMID , P.* FROM PR_DESC P )\n" + //
+						"SELECT * FROM PR WHERE NUMID BETWEEN " + (((page - 1) * 10) + 1) + " AND " + (page * 10);
+		System.out.println(sql);
 		ResultSet rs = DBConn.statementQuery(sql);
 		try {
 			while(rs.next()) {
@@ -94,25 +84,15 @@ public class ProductDao {
 			for(int i = 1; i < ca_ids.length; i++){
 				where += " OR ca_id = \'" + ca_ids[i] + "\'";
 			}
-			selectCount(where);
 		}
+		count = selectCount(where);
 		if(page < 1 || page > count / 10 + 1){
 			return list;
 		}
-		String sql = "WITH " + //
-						"PR_RESULT AS ( " + //
-						"select " + //
-						"ROWNUM as NO, " + //
-						"P.pr_id, " + //
-						"P.tm_id, " + //
-						"P.ca_id," + //
-						"P.pr_name, " + //
-						"P.pr_regdate, " + //
-						"P.pr_thum_img, " + //
-						"P.pr_detail_img " + //
-						"from products P " + " WHERE " + where + " ORDER BY P.pr_id desc ) " + //
-						"SELECT * FROM PR_RESULT " + //
-						"WHERE (NO BETWEEN " + (((page - 1) * 10) + 1) + " AND " + (page * 10) + ")";
+		String sql = "WITH PR_DESC AS ( select P.pr_id, P.tm_id, P.ca_id,P.pr_name, P.pr_regdate, P.pr_thum_img, P.pr_detail_img from products P WHERE "+  where + " ORDER BY P.pr_id desc ) ," + //
+						"PR AS ( select ROWNUM as NUMID , P.* FROM PR_DESC P )" + //
+						"SELECT * FROM PR WHERE NUMID BETWEEN " + (((page - 1) * 10) + 1) + " AND " + (page * 10);
+		System.out.println(sql);
 		ResultSet rs = DBConn.statementQuery(sql);
 		try {
 			while(rs.next()) {
@@ -145,20 +125,9 @@ public class ProductDao {
 		if(page < 1 || page > count / 10 + 1){
 			return list;
 		}
-		String sql = "WITH " + //
-						"PR_RESULT AS ( " + //
-						"select " + //
-						"ROWNUM as NO, " + //
-						"P.pr_id, " + //
-						"P.tm_id, " + //
-						"P.ca_id," + //
-						"P.pr_name, " + //
-						"P.pr_regdate, " + //
-						"P.pr_thum_img, " + //
-						"P.pr_detail_img " + //
-						"from products P " + " WHERE " + where + " ORDER BY P.pr_id desc ) " + //
-						"SELECT * FROM PR_RESULT " + //
-						"WHERE (NO BETWEEN " + (((page - 1) * 10) + 1) + " AND " + (page * 10) + ")";
+		String sql = "WITH PR_DESC AS ( select P.pr_id, P.tm_id, P.ca_id,P.pr_name, P.pr_regdate, P.pr_thum_img, P.pr_detail_img from products P WHERE " + where + " ORDER BY P.pr_id desc ) ," + //
+						"PR AS ( select ROWNUM as NUMID , P.* FROM PR_DESC P )" + //
+						"SELECT * FROM PR WHERE NUMID BETWEEN " + (((page - 1) * 10) + 1) + " AND " + (page * 10);
 		ResultSet rs = DBConn.statementQuery(sql);
 		try {
 			while(rs.next()) {
@@ -203,20 +172,9 @@ public class ProductDao {
 			}
 		}
 		count = selectCount(where);
-		String sql = "WITH " + //
-						"PR_RESULT AS ( " + //
-						"select " + //
-						"ROWNUM as NO, " + //
-						"P.pr_id, " + //
-						"P.tm_id, " + //
-						"P.ca_id, " + //
-						"P.pr_name, " + //
-						"P.pr_regdate, " + //
-						"P.pr_thum_img, " + //
-						"P.pr_detail_img " + //
-						"from products P " + " WHERE " + where + " ORDER BY P.pr_id desc ) " + //
-						"SELECT * FROM PR_RESULT  " + //
-						"WHERE (NO BETWEEN " + (((page - 1) * 10) + 1) + " AND " + (page * 10) + ")";
+		String sql = "WITH PR_DESC AS ( select P.pr_id, P.tm_id, P.ca_id,P.pr_name, P.pr_regdate, P.pr_thum_img, P.pr_detail_img from products P WHERE "+ where + " ORDER BY P.pr_id desc ) ," + //
+						"PR AS ( select ROWNUM as NUMID , P.* FROM PR_DESC P )" + //
+						"SELECT * FROM PR WHERE NUMID BETWEEN " + (((page - 1) * 10) + 1) + " AND " + (page * 10);
 		if(tm_ids != null && tm_ids.length > 0){
 			sql += " AND ( tm_id = \'" + tm_ids[0] + "\'";
 			for(int i = 1; i < tm_ids.length; i++){
