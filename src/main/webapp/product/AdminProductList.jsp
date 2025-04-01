@@ -83,6 +83,11 @@
                 checkbox.checked = !checkbox.checked;
             }
         }
+        function reset(current_element){
+            current_element.parentElement.querySelectorAll('input[type="checkbox"]').forEach((element) => {
+                element.removeAttribute("checked")
+            });
+        }
     </script>
     <title>MLB - AdminProductList</title>
 </head>
@@ -173,6 +178,7 @@
             </details>
         </div>
         <input class="search" type="submit" value="Search">
+        <input class="reset-button" type="button" onclick="reset(this)" value="Reset">
     </form>
     </div>
     </div>
