@@ -60,7 +60,13 @@
     <title>MLB - AdminProductEdit</title>
     <script>
         function selectProductStock(productStockId){
+            try {
+                document.querySelectorAll("input[name='productStockId']").forEach(function(element){
+                    element.removeAttribute("checked");
+                });
+            } catch (e) {}
             let productStockIdElement = document.querySelector('input[name="productStockId"][value="' + productStockId + '"]');
+            productStockIdElement.setAttribute("checked", "checked");
             let color = productStockIdElement.parentElement.parentElement.querySelector("label.product-color").id;
             let size = productStockIdElement.parentElement.parentElement.querySelector("label.product-size").id;
             let price = productStockIdElement.parentElement.parentElement.querySelector("label.product-price").id;
@@ -162,9 +168,9 @@
                     <th>재고</th>
                 </tr>
                 <c:forEach var="productStock" items="${productStockList}">
-                <tr>
+                <tr onclick="selectProductStock(${productStock.getPr_st_id()})">
                     <td>
-                        <input type="radio" name="productStockId" value="${productStock.getPr_st_id()}" onclick="selectProductStock(${productStock.getPr_st_id()})">
+                        <input type="radio" name="productStockId" value="${productStock.getPr_st_id()}">
                     </td>
                     <td><label class="product-color" id="${productStock.getCl_id()}">${productStock.getCl_name()}</label></td>
                     <td><label class="product-size" id="${productStock.getSz_id()}">${productStock.getSz_id()}</label></td>
