@@ -255,7 +255,7 @@ function logprocess(action, id = "", pw = "") {
 					<a class="link_white" href="${approot}adminUser.jsp">회원관리</a>
 				</div>
 				<div class="camenu">
-  					<a class="link_white" href="${approot}adminProduct.jsp">상품관리</a>
+  					<a class="link_white" href="${approot}/product/AdminProductList.jsp">상품관리</a>
   				</div>
   				<div class="camenu">
   					<a class="link_white" href="${approot}adminOrder.jsp">주문조회</a>
