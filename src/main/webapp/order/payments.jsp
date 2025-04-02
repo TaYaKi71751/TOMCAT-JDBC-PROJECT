@@ -120,8 +120,8 @@
                         <label class="product-color">색상: ${orderDetail.getCl_name()}</label>
                         <label class="product-size">사이즈: ${orderDetail.getSz_id()}</label>
                         <label class="product-quantity">수량: ${orderDetail.getOrderQuantity()}</label>
-                        <label class="product-price">${orderDetail.getCurrentPrice()}원/수량</label>
-                        <label class="product-option-price">${orderDetail.getCurrentTotalPrice()}원</label>
+                        <label class="product-price"><fmt:formatNumber value="${orderDetail.getPrice()}" pattern="#,###" />원/수량</label>
+                        <label class="product-option-price"><fmt:formatNumber value="${orderDetail.getTotalPrice()}" pattern="#,###" />원</label>
                     </div>
                 </div>
             </c:forEach>

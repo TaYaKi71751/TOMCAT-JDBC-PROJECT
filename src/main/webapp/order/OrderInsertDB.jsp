@@ -68,9 +68,10 @@
     Long orderId = orderDao.insert(orderDto);
     for(OrderDetailDto orderDetailDto : orderDetailList){
         orderDetailDto.setOrderId(orderId);
+        orderDetailDto.setOrderPrice(orderDetailDto.getCurrentPrice());
         orderDetailDao.update(orderDetailDto);
     }
-    response.sendRedirect(request.getContextPath() + "/order/orders.jsp");
+    response.sendRedirect(request.getContextPath() + "/order/OrderPaySuccess.jsp?order_id=" + orderId);
     %>
 </head>
 <body>
