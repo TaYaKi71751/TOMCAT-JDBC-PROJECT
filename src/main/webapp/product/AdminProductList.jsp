@@ -68,10 +68,29 @@
     }
     session.setAttribute("teamList",teamList);
     session.setAttribute("productList", productList);
+    String where = "";
+    if(categories != null && categories.length > 0){
+        where = " ( ca_id = \'" + categories[0] + "\'";
+        for(int i = 1; i < categories.length; i++){
+            where += " OR ca_id = \'" + categories[i] + "\'";
+        }
+        where += " ) ";
+    }
+    if(teams != null && teams.length > 0){
+        if(where.equals("")){
+            where = " ( tm_id = \'" + teams[0] + "\'";
+        } else {
+            where += " AND ( tm_id = \'" + teams[0] + "\'";
+        }
+        for(int i = 1; i < teams.length; i++){
+            where += " OR tm_id = \'" + teams[i] + "\'";
+        }
+        where += " ) ";
+    }
+    Long count = productDao.selectCount(where);
     if (pageNum > 1) {
-        System.out.println(productList.size());
-        if (productList.size() == 0) {
-            response.sendRedirect(request.getContextPath() + "/product/AdminProductList.jsp?page=" + (pageNum - 1) + params);
+        if (productList.size() == 0 && count < (pageNum * 10)) {
+            response.sendRedirect(request.getContextPath() + "/product/AdminProductList.jsp?page=" + (((count % 10) == 0 ? 0 : 1) + (productDao.selectCount(where) / 10)) + params);
             return;
         }
     }
@@ -206,26 +225,7 @@
     <label class="page-number" for="PageNumber"><%= pageNum %></label>
 
     <%
-    String where = "";
-    if(categories != null && categories.length > 0){
-        where = " ( ca_id = \'" + categories[0] + "\'";
-        for(int i = 1; i < categories.length; i++){
-            where += " OR ca_id = \'" + categories[i] + "\'";
-        }
-        where += " ) ";
-    }
-    if(teams != null && teams.length > 0){
-        if(where.equals("")){
-            where = " ( tm_id = \'" + teams[0] + "\'";
-        } else {
-            where += " AND ( tm_id = \'" + teams[0] + "\'";
-        }
-        for(int i = 1; i < teams.length; i++){
-            where += " OR tm_id = \'" + teams[i] + "\'";
-        }
-        where += " ) ";
-    }
-    if(productDao.selectCount(where) > pageNum * 10){
+    if(count > pageNum * 10){
     %>
     <a class="page-button" href="<%= request.getContextPath() %>/product/AdminProductList.jsp?page=<%= pageNum + 1 %><%= params %>">Next</a>
     <%
