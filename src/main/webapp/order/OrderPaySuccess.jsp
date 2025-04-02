@@ -98,7 +98,7 @@
                         pageContext.setAttribute("totalPrice", totalPrice);
                     }
                 %>
-                <label class="total-price">주문금액 : <fmt:formatNumber value="${totalPrice}" type="number"></fmt:formatNumber>원</label>
+                <label class="total-price"><fmt:formatNumber value="${totalPrice}" type="number"></fmt:formatNumber>원</label>
             </h3>
         </div>
     </div>
