@@ -134,16 +134,16 @@
                 <option value="kakao">카카오 페이</option>
             </select>
         </div>
-        <h3 style="right : 0px;">
-        <label class="total-price"><%
-            if(orderDetailList.size() != 0){
-                Long totalPrice = 0l;
-                for(OrderDetailDto orderDetail : orderDetailList){
-                    totalPrice += orderDetail.getCurrentTotalPrice();
+        <h3>
+            <label class="total-price">주문금액 : <%
+                if(orderDetailList.size() != 0){
+                    Long totalPrice = 0l;
+                    for(OrderDetailDto orderDetail : orderDetailList){
+                        totalPrice += orderDetail.getCurrentTotalPrice();
+                    }
+                    out.println(totalPrice);
                 }
-                out.println(totalPrice);
-            }
-        %>원</label>
+            %>원</label>
         </h3>
         <div class="submit">
             <button type="submit">결제</button>

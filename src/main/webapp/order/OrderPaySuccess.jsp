@@ -88,6 +88,17 @@
                     </div>
                 </div>
             </c:forEach>
+            <h3>
+                <label class="total-price">주문금액 : <%
+                    if(orderDetailList.size() != 0){
+                        Long totalPrice = 0l;
+                        for(OrderDetailDto orderDetail : orderDetailList){
+                            totalPrice += orderDetail.getCurrentTotalPrice();
+                        }
+                        out.println(totalPrice);
+                    }
+                %>원</label>
+            </h3>
         </div>
     </div>
     <a href="<%= request.getContextPath() %>/index.jsp">
