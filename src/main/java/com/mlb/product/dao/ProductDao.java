@@ -175,28 +175,6 @@ public class ProductDao {
 		String sql = "WITH PR_DESC AS ( select P.pr_id, P.tm_id, P.ca_id,P.pr_name, P.pr_regdate, P.pr_thum_img, P.pr_detail_img from products P WHERE "+ where + " ORDER BY P.pr_id desc ) ," + //
 						"PR AS ( select ROWNUM as NUMID , P.* FROM PR_DESC P )" + //
 						"SELECT * FROM PR WHERE NUMID BETWEEN " + (((page - 1) * 10) + 1) + " AND " + (page * 10);
-		if(tm_ids != null && tm_ids.length > 0){
-			sql += " AND ( tm_id = \'" + tm_ids[0] + "\'";
-			for(int i = 1; i < tm_ids.length; i++){
-				sql += " OR tm_id = \'" + tm_ids[i] + "\'";
-			}
-			sql += ")";
-		}
-		if(ca_ids != null && ca_ids.length > 0){
-			if(tm_ids != null && tm_ids.length > 0){
-				sql += " AND (ca_id = \'" + ca_ids[0] + "\'";
-				for(int i = 1; i < ca_ids.length; i++){
-					sql += " OR ca_id = \'" + ca_ids[i] + "\'";
-				}
-				sql += ")";
-			}else{
-				sql += " AND ( ca_id = \'" + ca_ids[0] + "\'";
-				for(int i = 1; i < ca_ids.length; i++){
-					sql += " OR ca_id = \'" + ca_ids[i] + "\'";
-				}
-				sql += ")";
-			}
-		}
 		ResultSet rs = DBConn.statementQuery(sql);
 		try {
 			while(rs.next()) {
