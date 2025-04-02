@@ -1,5 +1,6 @@
-package com.mlb.order.dto;
+package com.mlb.order.pay.dto;
 
+import com.mlb.product.dao.ProductDao;
 import com.mlb.product.dao.ProductStockDao;
 
 public class OrderDetailDto {
@@ -67,4 +68,23 @@ public class OrderDetailDto {
     public Long getTotalPrice() {
         return order_price * order_quantity;
     }
+    public String getPr_thum_img() {
+        return new ProductDao().selectByProductId(new ProductStockDao().selectByProductStockId(pr_st_id).getPr_id()).getPr_thum_img();
+    }
+
+    public String getPr_name() {
+        return new ProductDao().selectByProductId(new ProductStockDao().selectByProductStockId(pr_st_id).getPr_id()).getPr_name();
+    }
+
+    public String getTm_name() {
+        return new ProductDao().selectByProductId(new ProductStockDao().selectByProductStockId(pr_st_id).getPr_id()).getTm_name();
+    }
+    public String getCl_name() {
+        return new ProductStockDao().selectByProductStockId(pr_st_id).getCl_name();
+    }
+
+    public String getSz_id() {
+        return new ProductStockDao().selectByProductStockId(pr_st_id).getSz_id();
+    }
+
 }
