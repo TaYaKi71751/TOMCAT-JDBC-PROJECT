@@ -89,15 +89,16 @@
                 </div>
             </c:forEach>
             <h3>
-                <label class="total-price">주문금액 : <%
+                <%
                     if(orderDetailList.size() != 0){
                         Long totalPrice = 0l;
                         for(OrderDetailDto orderDetail : orderDetailList){
                             totalPrice += orderDetail.getCurrentTotalPrice();
                         }
-                        out.println(totalPrice);
+                        pageContext.setAttribute("totalPrice", totalPrice);
                     }
-                %>원</label>
+                %>
+                <label class="total-price">주문금액 : <fmt:formatNumber value="${totalPrice}" type="number"></fmt:formatNumber>원</label>
             </h3>
         </div>
     </div>
