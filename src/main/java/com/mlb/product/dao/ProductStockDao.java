@@ -54,6 +54,25 @@ public class ProductStockDao {
         return list;
     }
 
+    public ProductStockDto selectByProductStockId(Long pr_st_id) {
+        ProductStockDto dto = new ProductStockDto();
+        String sql = "SELECT * FROM product_stocks WHERE pr_st_id = " + pr_st_id;
+        ResultSet rs = DBConn.statementQuery(sql);
+        try {
+            if(rs.next()) {
+                dto.setPr_st_id(rs.getLong("pr_st_id"));
+                dto.setPr_id(rs.getLong("pr_id"));
+                dto.setCl_id(rs.getString("cl_id"));
+                dto.setSz_id(rs.getString("sz_id"));
+                dto.setQuantity(rs.getLong("quantity"));
+                dto.setPrice(rs.getLong("price"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return dto;
+    }
+
     public void update(ProductStockDto dto){
         String sql = "UPDATE product_stocks SET " 
         + "pr_id = " + dto.getPr_id() + " , " 

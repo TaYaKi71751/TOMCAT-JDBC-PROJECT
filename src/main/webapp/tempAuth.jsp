@@ -3,6 +3,7 @@
 <%
     // 파라미터로 동작 구분
     String action = request.getParameter("action");
+	System.out.println("action: " + action);
 
     if ("login".equals(action)) { 
         String userId = request.getParameter("userId");
@@ -32,6 +33,7 @@
         
     } else if ("logout".equals(action)) {
     	// 로그아웃 처리
+    	System.out.println("logout");
         if (session != null) {
         	session.removeAttribute("user_id");
         	session.removeAttribute("grade");
@@ -39,6 +41,8 @@
         }
         response.getWriter().write("logout-success");
     }
+    
+    
 %>
 
 

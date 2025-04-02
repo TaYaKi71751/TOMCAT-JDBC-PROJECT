@@ -11,12 +11,9 @@
 	//String OracleDriver = application.getInitParameter("oracleDriver");
 	//application.setAttribute("OracleDriver", OracleDriver);
 	
-	// 리소스 이미지 디렉토리 
-	if(application.getAttribute("approot") == null )
-	{
-		String approot = application.getContextPath() +"/";
-		application.setAttribute("approot", approot);
-	}
+	// root 디렉토리 
+	String approot = application.getContextPath() +"/";
+	application.setAttribute("approot", approot);
 	
 	// 상품썸네일이미지 디렉토리 
 	if(application.getAttribute("thumImgDir") == null )
@@ -62,6 +59,7 @@
 	
 %>
 
+<c:set var="approot" value="${applicationScope.approot}" />
 <c:if test="${not empty sessionScope.userId}">
     <c:set target="${sessionScope}" property="user_id" value="${sessionScope.user_id}"/>
     <c:set target="${sessionScope}" property="grade" value="${sessionScope.grade}"/>
@@ -73,9 +71,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Noto+Sans+KR:wght@100..900&display=swap" rel="stylesheet">
 
-
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=shopping_bag" />
-
+<!-- 아이콘 순서대로 기입해야함  -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=manage_accounts,shopping_bag" />
 <style type="text/css">
 
 *{
@@ -95,6 +92,7 @@
 	height: 92px;
 	color:#FFFFFF;
 	font-family: "Lucida Sans", sans-serif;
+	z-index: 1000;
 }
 
 #topnavigation_container .logo {
@@ -179,6 +177,42 @@
 .material-symbols-outlined:active :visited{
 }
 
+.material-symbols-outlined .tooltiptext {
+	
+    visibility: hidden;
+ 	width: 50px;
+ 	background-color: #222222;
+ 	color: #fff;
+ 	text-align: center;
+ 	font-family:dotum;
+ 	font-size:10px;
+ 	text-transform:capitalize;
+ 	border-radius: 6px;
+ 	padding: 5px 0;
+  
+    /* Position the tooltip */
+ 	position: absolute;
+ 	z-index: 1;
+ 	bottom: 100%;
+ 	left: 50%;
+ 	margin-left: -25px; 
+}
+
+.material-symbols-outlined:hover {
+	cursor: pointer;
+}
+.material-symbols-outlined:hover .tooltiptext {
+    visibility: visible;
+}
+
+
+
+.noto-sans-kr-400 {
+  font-family: "Noto Sans KR", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
 
 </style>
 
@@ -198,7 +232,7 @@ function logprocess(action, id = "", pw = "") {
     }
 
     // AJAX 요청
-    fetch("<%= request.getContextPath() %>/tempAuth.jsp", {
+    fetch( "<%=application.getContextPath()%>/tempAuth.jsp" , {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: params.toString()
@@ -221,9 +255,16 @@ function logprocess(action, id = "", pw = "") {
 }
 </script>
 
-
 <div id="topnavigation_container">
-	<div class="logo"><a href="${approot}index.jsp"><img width="100px" src="${resource}mlblogo.png"/></a></div>
+
+	<c:if test="${not empty user_id && grade eq 'admin'}">
+		<div class="logo"><img width="100px" src="${resource}mlblogo.png"/></div>
+	</c:if>
+	
+	<c:if test="${grade ne 'admin'}">
+		<div class="logo"><a href="${approot}index.jsp"><img width="100px" src="${resource}mlblogo.png"/></a></div>
+	</c:if>
+	
 	<div class="navibox_container">
 	
 		<div class="usermenu">
@@ -235,15 +276,26 @@ function logprocess(action, id = "", pw = "") {
 			<c:if test="${not empty user_id && grade ne 'admin'}">
 				<span>${name} 님 <span style="color:red">일반사용자</span> 계정 입니다. </span>
 				<button class="logbtn" onclick="logprocess('logout')"><span class="link_white">logOut</span></button>
-				<a href="${approot}cart.jsp">
-				<span class="material-symbols-outlined" style="position: relative; top: 5px ; margin-left:5px">shopping_bag</span>
+				<a href="${approot}customer/update.jsp">
+					<span class="material-symbols-outlined" style="position: relative; top: 5px ; margin-left:5px">
+						manage_accounts
+						<span class="tooltiptext" >mypage</span>
+					</span>
+				</a>
+				<a href="${approot}order/orderList.jsp?view=cart">
+					
+					<span class="material-symbols-outlined" style="position: relative; top: 5px ; margin-left:5px">
+						shopping_bag
+						<span class="tooltiptext" >cart</span>
+					</span>
 				</a>
 			</c:if>
 			
 			<c:if test="${empty user_id}">
-				<a href="${approot}join.jsp"><span class="link_white">join</span></a> | 
+				<a href="${approot}customer/register.jsp"><span class="link_white">join</span></a> | 
 				<button class="logbtn" onclick="logprocess('login','1234','adminpass')"><span class="link_white">adminlogIn</span></button>
 				<button class="logbtn" onclick="logprocess('login','johndoe1','password1')"><span class="link_white">customerlogIn</span></button>
+				<button class="logbtn" onclick="location.href='${approot}customer/login.jsp'"><span class="link_white">logIn</span></button>
 			</c:if>
 		
 		</div>
@@ -252,16 +304,16 @@ function logprocess(action, id = "", pw = "") {
 		<c:if test="${not empty user_id && grade eq 'admin'}">
 			<div class="camenu_container">
 				<div class="camenu">
-					<a class="link_white" href="${approot}adminUser.jsp">회원관리</a>
+					<a class="link_white" href="${approot}customer/userList.jsp">회원관리</a>
 				</div>
 				<div class="camenu">
-  					<a class="link_white" href="${approot}/product/AdminProductList.jsp">상품관리</a>
+  					<a class="link_white" href="${approot}product/AdminProductList.jsp">상품관리</a>
   				</div>
   				<div class="camenu">
-  					<a class="link_white" href="${approot}adminOrder.jsp">주문조회</a>
+  					<a class="link_white" href="${approot}order/orderList.jsp?view=admin">주문조회</a>
   				</div>
   				<div class="camenu">
-  					<a class="link_white" href="${approot}adminOrderStatistics.jsp">매출통계</a>
+  					<a class="link_white" href="${approot}order/orderStatistics.jsp">매출통계</a>
   				</div>
 			</div>
 		</c:if>
@@ -269,16 +321,16 @@ function logprocess(action, id = "", pw = "") {
 		<c:if test="${grade ne 'admin'}">
 			<div class="camenu_container">
 			<div class="camenu">
-				<a class="link_white" href="${approot}productcategory.jsp?ca_id=BallCap">BallCap</a>
+				<a class="link_white" href="${approot}store/productcategory.jsp?ca_id=BallCap">BallCap</a>
 			</div>
 			<div class="camenu">
-  				<a class="link_white" href="${approot}productcategory.jsp?ca_id=Hat">Hat</a>
+  				<a class="link_white" href="${approot}store/productcategory.jsp?ca_id=Hat">Hat</a>
   			</div>
   			<div class="camenu">
-  				<a class="link_white" href="${approot}productcategory.jsp?ca_id=Season">Season</a>
+  				<a class="link_white" href="${approot}store/productcategory.jsp?ca_id=Season">Season</a>
   			</div>
   			<div class="camenu">
-  				<a class="link_white" href="${approot}productcategory.jsp?ca_id=Beanie">Beanie</a>
+  				<a class="link_white" href="${approot}store/productcategory.jsp?ca_id=Beanie">Beanie</a>
   			</div>
 		</div>
 		</c:if>
