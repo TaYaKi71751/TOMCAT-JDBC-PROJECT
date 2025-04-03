@@ -12,7 +12,7 @@ public class ProductsStocksDao {
 	// 카테고리별 조회
 	public ArrayList<ProductsStocksDto> selectAllByCategory(String category){
 		ArrayList<ProductsStocksDto> dto = new ArrayList<ProductsStocksDto>();
-		String sql = String.format("select distinct p.pr_ID, p.pr_name, p.pr_thum_img, ps.price, p.pr_regdate "
+		String sql = String.format("select distinct p.pr_ID, p.pr_name, p.pr_thum_img, ps.price "
 				+ "from products p, product_stocks ps where p.pr_id=ps.pr_id and p.ca_id='%s'", category);
 //		System.out.println("====selectAllByCategory===" );
 //		System.out.println(sql);
@@ -130,12 +130,54 @@ public class ProductsStocksDao {
 		return dto;
 	}
 	
+	// 검색->팀별 재조회안됨ㅜㅜ
+	public ArrayList<ProductsStocksDto> searchProductsByTeams(String input, String[] teams){
+		ArrayList<ProductsStocksDto> dto = new ArrayList<ProductsStocksDto>();
+		String teamList = String.join("','", teams);
+		String sql = String.format("select distinct p.pr_id, p.pr_name, p.pr_thum_img, ps.price from products p, product_stocks ps, teams t\r\n"
+				+ "where p.pr_id=ps.pr_id and p.tm_id=t.tm_id and t.tm_id in ('%s') and p.pr_name  like '%%%s%%'", teamList, input); // %% -> % 
+		System.out.println("====searchProductsByTeams===" );
+		System.out.println(sql);
+		ResultSet rs = DBConn.statementQuery(sql);
+		try {
+			while(rs.next()) {
+				dto.add(new ProductsStocksDto(
+						rs.getLong("pr_ID"),
+						rs.getString("pr_name"),
+						rs.getString("pr_thum_img"),
+						rs.getInt("price")));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return dto;
+	}
 	
-		
+	
+	
 	// 상품 갯수 세기
 	public int countProducts(String input) {
 		String sql = String.format("select count(*) count from products where pr_name like '%%%s%%'", input);
 //		System.out.println(sql);
+		ResultSet rs = DBConn.statementQuery(sql);
+		int count = 0;
+		try {
+			if(rs.next()) {
+				count = rs.getInt("count");
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return count;
+	}
+	
+	
+	// 검색->팀별조회 상품갯수 조회
+	public int countProductsByTeams(String input, String[] teams) {
+		String teamList = String.join("','", teams);
+		String sql = String.format("select count(*) count from products where pr_name like '%%%s%%' and tm_id in ('%s')", input, teamList);
 		ResultSet rs = DBConn.statementQuery(sql);
 		int count = 0;
 		try {

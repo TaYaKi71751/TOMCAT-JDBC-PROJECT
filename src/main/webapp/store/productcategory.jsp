@@ -5,29 +5,36 @@
 <%@page import="java.util.*"%>
 <%@page import="com.mlb.store.dto.*"%>
 <%
-	String category = request.getParameter("ca_id");
-	String[] teams = request.getParameterValues("team");
-	String sort = request.getParameter("sort");
-	String items = request.getParameter("search");
+	String category = request.getParameter("ca_id"); // 카테고리(BallCap, Hat, ...)
+	String[] teams = request.getParameterValues("team"); // 팀
+	String sort = request.getParameter("sort"); // 최신순/기본순 정렬
+	String items = request.getParameter("search"); // 검색
 	
-	com.mlb.store.dao.ProductsStocksDao dao = new com.mlb.store.dao.ProductsStocksDao();
-	ArrayList<ProductsStocksDto> dto = null;
-	int count = 0;
+	com.mlb.store.dao.ProductsStocksDao dao = new com.mlb.store.dao.ProductsStocksDao(); // dao 호출
+	ArrayList<ProductsStocksDto> dto = null; // ArrayList에 dto담아 초기화
+	int count = 0; // count(상품개수) 초기화
 	
-	if(teams!=null){
-		dto = dao.selectByCaTeams(category, teams);
-	}else if(items!=null && !items.isEmpty()){
-		if("latest".equals(sort)){
-			dto = dao.searchProductsByDate(items);
-		}else{
-			dto = dao.searchProducts(items);
+
+	// 검색
+ 	if(items != null && !items.isEmpty()) { 
+	    if(teams != null) { // 팀 선택
+	        dto = dao.searchProductsByTeams(items, teams);
+	        count = dao.countProductsByTeams(items, teams);
+	    }else {
+	    	dto = "latest".equals(sort) ? dao.searchProductsByDate(items) : dao.searchProducts(items);
+	    	count = dao.countProducts(items);
+	    }
+ 	// 검색X
+	}else {
+		if(teams != null) { 
+	    	dto = dao.selectByCaTeams(category, teams); 
+		}else if("latest".equals(sort)) { 
+		    dto = dao.selectByCaDate(category); 
+		}else { 
+		    dto = dao.selectAllByCategory(category); 
 		}
-		count = dao.countProducts(items);
-	}else if("latest".equals(sort)){
-		dto = dao.selectByCaDate(category);
-	}else{
-		dto = dao.selectAllByCategory(category);
 	}
+
 
 	request.setAttribute("items", items);
 	request.setAttribute("count", count);
@@ -127,7 +134,7 @@ a{
     border-radius: 5px;
 }
 
-@media screen and (max-width: 992px) {
+@media screen and (max-width: 1000px) {
     .filter {
         flex-direction: column;
         align-items: flex-start;
@@ -179,7 +186,12 @@ a{
 <div class="filter">
 	<form action="productcategory.jsp" method="get" class="filter1">
 		<label for="team"></label>
+		<c:if test="${not empty category }">
 		<input type="hidden" name="ca_id" value="${category }">
+		</c:if>
+		<c:if test="${not empty items }">
+			<input type="hidden" name="search" value="${items }">
+		</c:if>
 	    <input type="checkbox" name="team" value="LaDodgers"> LA 다저스
 	    <input type="checkbox" name="team" value="Boston"> 보스턴 레드삭스
 	    <input type="checkbox" name="team" value="Cleveland"> 클리블랜드 가디언스
