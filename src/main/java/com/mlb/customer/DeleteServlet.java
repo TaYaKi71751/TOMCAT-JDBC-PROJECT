@@ -25,14 +25,14 @@ public class DeleteServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
 
-        // 요청에서 userId 가져오기
+        
         String userIdStr = request.getParameter("userId");
         boolean isDeleted = false;
 
         if (userIdStr != null && !userIdStr.trim().isEmpty()) {
             try {
-                Long userId = Long.parseLong(userIdStr); // String → Long 변환
-                isDeleted = UserDao.deleteUser(userId); // UserDao의 deleteUser(Long) 메서드 호출
+                Long userId = Long.parseLong(userIdStr); 
+                isDeleted = UserDao.deleteUser(userId); 
             } catch (NumberFormatException e) {
                 e.printStackTrace();
             }

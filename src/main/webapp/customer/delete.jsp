@@ -9,11 +9,17 @@
 <body>
 <h2>회원 삭제</h2>
     <form action="DeleteServlet" method="post">
-        <label for="userId">삭제할 사용자 ID:</label>
-        <input type="text" id="userId" name="userId" required>
+        <input type="hidden" id="userId" name="userId" value=<% 
+        	out.println(session.getAttribute("user_id")); 
+        %> >
         <button type="submit">삭제</button>
     </form>
-    <a href="userList.jsp">회원 목록</a>
+    <br>
+    <%
+    	if(session.getAttribute("grade").equals("admin")){
+    		out.println("<a href=\"userList.jsp\">회원 목록</a>");	
+    	}
+    %>
     
 </body>
 </html>

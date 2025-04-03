@@ -27,13 +27,14 @@ public class LoginServlet extends HttpServlet {
         String password = request.getParameter("password");
         
         UserDto user = UserDao.getUser(userId, password);
+        
         if (user != null) {
             HttpSession session = request.getSession();
             session.setAttribute("user", user);
-//            session.setAttribute("user_id", user.getUserId().toString());
-//            session.setAttribute("grade", user.getGrade());
-//            session.setAttribute("name", user.getName());
-            response.sendRedirect("welcome.jsp");
+            session.setAttribute("user_id", user.getUserId().toString());
+            session.setAttribute("grade", user.getGrade());
+            session.setAttribute("name", user.getName());
+            response.sendRedirect("../topnavigator.jsp");
         } else {
             response.sendRedirect("login.jsp?error=Invalid Credentials");
         }

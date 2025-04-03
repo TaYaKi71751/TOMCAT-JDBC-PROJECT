@@ -2,12 +2,15 @@ package com.mlb.customer;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import com.mlb.utils.DBConn;
 
 public class UserDao {
+	
 	public static boolean registerUser(UserDto user) {
-        // INSERT 문을 실행할 SQL 쿼리 생성
+        // INSERT 문을 실행할 SQL 쿼리 생성(회원가입)
         String sql = String.format(
             "INSERT INTO users (grade, name, id, pw, address, hp, email, regdate) " +
             "VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', SYSDATE)",
@@ -24,9 +27,40 @@ public class UserDao {
         }
         return false;
 	}
+	
+    public static List<UserDto> getAllUsers() {
+        List<UserDto> users = new ArrayList<>();
+        
+        // SQL 쿼리 작성
+        String sql = "SELECT user_Id, grade, name, id, pw, address, hp, email, regdate FROM users";
+
+        try {
+            // DB 연결 및 쿼리 실행
+            ResultSet rs = DBConn.statementQuery(sql);
+            
+            while (rs.next()) {
+                UserDto user = new UserDto(
+                    rs.getLong("user_Id"),
+                    rs.getString("grade"),
+                    rs.getString("name"),
+                    rs.getString("id"),
+                    rs.getString("pw"),
+                    rs.getString("address"),
+                    rs.getString("hp"),
+                    rs.getString("email"),
+                    rs.getTimestamp("regdate").toLocalDateTime()
+                );
+                users.add(user);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return users;
+    }
 
 
     public static UserDto getUser(String userId, String password) {
+    	//로그인
         String sql = String.format("SELECT * FROM users WHERE Id = '%s'", userId);
         ResultSet rs = DBConn.statementQuery(sql);
         try {
@@ -53,6 +87,7 @@ public class UserDao {
     }
     
     public String findUserId(String name, String email) {
+    	//아이디 찾기
         String userId = null;
 
         String sql = String.format("SELECT id FROM users WHERE name = '%s' AND email = '%s'", name, email);
@@ -99,13 +134,6 @@ public class UserDao {
         return UUID.randomUUID().toString().substring(0, 8); // 8자리 랜덤 문자열 생성
     }
     
-/*    public static boolean updateUser(UserDto user) {
-        String sql = String.format(
-            "UPDATE users SET password = '%s', email = '%s' WHERE userId = '%s'",
-            user.getPw(), user.getEmail(), user.getUserId()
-        );
-        return DBConn.statementUpdate(sql) > 0;
-    }*/
     public static boolean updateUser(UserDto user, boolean updatePassword) {
         String sql;
         if (updatePassword) {
@@ -124,7 +152,7 @@ public class UserDao {
     }
 
     public static boolean deleteUser(Long userId) {
-        String sql = String.format("DELETE FROM users WHERE userId = %d", userId);
+        String sql = String.format("DELETE FROM users WHERE user_id = %d", userId);
         return DBConn.statementUpdate(sql) > 0;
     }
 
