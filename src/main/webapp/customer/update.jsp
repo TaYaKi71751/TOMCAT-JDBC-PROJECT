@@ -8,10 +8,11 @@
 	body { font-family: Arial, sans-serif; text-align: center; }
     form { width: 300px; margin: 0 auto; }
     input { display: block; width: 100%; margin-bottom: 10px; padding: 8px; }
-    button { width: 100%; padding: 10px; background-color: blue; color: white; border: none; }
+    .btnUpdate { width: 100%; padding: 10px; background-color: blue; color: white; border: none; }
 </style>
 </head>
 <body>
+	<jsp:include page="/topnavigator.jsp" />
     <h2>회원정보 수정</h2>
     <form action="UpdateServlet" method="post">
         <label>이름: <input type="text" name="name" value="${user.name}" required></label><br>
@@ -33,7 +34,7 @@
         <input type="hidden" id="userId" name="userId" value=<% 
         	out.println(session.getAttribute("user_id")); 
         %> >
-        <button type="submit">회원 탈퇴하기</button>
+        <button class= "btnUpdate" type = "submit">회원 탈퇴하기</button>
     </form>
     <br>
     <%

@@ -8,6 +8,8 @@
     <meta charset="UTF-8">
     <title>사용자 목록</title>
     <style>
+    body { font-family: Arial, sans-serif; text-align: center; }
+
         table {
             width: 100%;
             border-collapse: collapse;
@@ -29,7 +31,8 @@
     </style>
 </head>
 <body>
-
+<jsp:include page="/topnavigator.jsp" />
+<br>
 <h2>사용자 목록</h2>
 
 	<%
