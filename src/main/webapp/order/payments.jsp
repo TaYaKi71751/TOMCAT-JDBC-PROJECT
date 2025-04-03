@@ -6,8 +6,6 @@
 <%@ page import="java.util.*" %>
 <%@ page import="com.mlb.order.pay.dao.*" %>
 <%@ page import="com.mlb.order.pay.dto.*" %>
-<%@ page import="com.mlb.customer.dao.*" %>
-<%@ page import="com.mlb.customer.dto.*" %>
 <%@ page import="com.mlb.product.dao.*" %>
 <%@ page import="com.mlb.product.dto.*" %>
 <%@ page import="com.mlb.order.dto.option.*" %>
@@ -32,6 +30,14 @@
         response.sendRedirect(request.getContextPath() + "/customer/login.jsp");
         return;
     }
+    UserDao userDao = new UserDao();
+    UserDto userDto = userDao.selectByUserId(userId);
+    if(userDto == null){
+        response.sendRedirect(request.getContextPath() + "/customer/login.jsp");
+        return;
+    }
+    String address = userDto.getAddress();
+    pageContext.setAttribute("address", address);
     String[] order_detail_ids_string = request.getParameterValues("order_detail_id");
     String pr_st_id_string = request.getParameter("pr_st_id");
     String quantity_string = request.getParameter("quantity");
@@ -106,7 +112,7 @@
     <form action="<%= request.getContextPath() %>/order/OrderInsertDB.jsp">
         <div class="address">
             <label for="address">주소</label>
-            <input type="text" name="shipping_address" value="" required>
+            <input type="text" name="shipping_address" value="${address}" required>
         </div>
         <div class="item-list">
             <h2>상품목록</h2>
@@ -120,8 +126,8 @@
                         <label class="product-color">색상: ${orderDetail.getCl_name()}</label>
                         <label class="product-size">사이즈: ${orderDetail.getSz_id()}</label>
                         <label class="product-quantity">수량: ${orderDetail.getOrderQuantity()}</label>
-                        <label class="product-price"><fmt:formatNumber value="${orderDetail.getPrice()}" pattern="#,###" />원/수량</label>
-                        <label class="product-option-price"><fmt:formatNumber value="${orderDetail.getTotalPrice()}" pattern="#,###" />원</label>
+                        <label class="product-price"><fmt:formatNumber value="${orderDetail.getCurrentPrice()}" pattern="#,###" />원/수량</label>
+                        <label class="product-option-price"><fmt:formatNumber value="${orderDetail.getCurrentTotalPrice()}" pattern="#,###" />원</label>
                     </div>
                 </div>
             </c:forEach>
