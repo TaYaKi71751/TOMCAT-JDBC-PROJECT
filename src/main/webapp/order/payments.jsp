@@ -67,6 +67,10 @@
                 response.sendRedirect(request.getContextPath() + "/cart/cart.jsp");
                 return;
             }
+            if(orderDetailDto.getOrderId() != 0){
+                response.sendRedirect(request.getContextPath() + "/cart/cart.jsp");
+                return;
+            }
             productStock = productStockDao.selectByProductStockId(orderDetailDto.getPrStId());
             if(productStock == null || productStock.getQuantity() < orderDetailDto.getOrderQuantity()) {
                 response.sendRedirect(request.getContextPath() + "/cart/cart.jsp");

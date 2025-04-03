@@ -51,6 +51,10 @@
             response.sendRedirect(request.getContextPath() + "/order/payments.jsp?error=invalid_order_detail_id" + params);
             return;
         }
+        if(orderDetailDto.getOrderId() != 0){
+            response.sendRedirect(request.getContextPath() + "/order/payments.jsp?error=invalid_order_detail_id" + params);
+            return;
+        }
         orderDetailList.add(orderDetailDto);
         totalPrice += orderDetailDto.getCurrentTotalPrice();
     }
