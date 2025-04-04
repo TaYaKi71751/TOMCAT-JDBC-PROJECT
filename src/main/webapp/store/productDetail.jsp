@@ -37,6 +37,7 @@ Long prStId = null;
 if (selectedColor != null && selectedSize != null) {
     prStId = dao.getPrStIdByColorAndSize(prID, selectedColor, selectedSize);
     request.setAttribute("prStId", prStId); 
+	System.out.println("prStId = " + prStId);
 }
 
 
@@ -293,7 +294,7 @@ System.out.println(" size: " + request.getParameter("size"));
 					<!-- 장바구니 버튼 -->
 					<form action="${contextPath}/cart/cart.jsp" method="post">
 						<input type="hidden" name="user_id" value="${user_id}"> 
-						<input type="hidden" name="pr_st_id" value="${prStID}"> 
+						<input type="hidden" name="pr_st_id" value="${prStId}"> 
 						<input type="hidden" name="quantity" value="1">
 						<button type="submit" class="cart-button">장바구니</button>
 					</form>
