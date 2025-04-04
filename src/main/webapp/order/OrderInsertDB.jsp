@@ -33,6 +33,7 @@
     String[] order_detail_ids_string = request.getParameterValues("order_detail_id");
     String params = "";
     Long totalPrice = 0l;
+    ProductStockDao productStockDao = new ProductStockDao();
     OrderDetailDao orderDetailDao = new OrderDetailDao();
     ArrayList<OrderDetailDto> orderDetailList = new ArrayList<OrderDetailDto>();
     for(String order_detail_id_string : order_detail_ids_string){
@@ -57,6 +58,14 @@
             response.sendRedirect(request.getContextPath() + "/order/payments.jsp?error=invalid_order_detail_id" + params);
             return;
         }
+        if(orderDetailDto.getOrderQuantity() <= 0){
+            response.sendRedirect(request.getContextPath() + "/order/payments.jsp?error=invalid_order_detail_id" + params);
+            return;
+        }
+        if(orderDetailDto.getOrderQuantity() > productStockDao.selectByProductStockId(orderDetailDto.getPrStId()).getQuantity()){
+            response.sendRedirect(request.getContextPath() + "/order/payments.jsp?error=invalid_order_detail_id" + params);
+            return;
+        }
         orderDetailList.add(orderDetailDto);
         totalPrice += orderDetailDto.getCurrentTotalPrice();
     }
@@ -66,7 +75,6 @@
     }
     OrderDao orderDao = new OrderDao();
     OrderDto orderDto = new OrderDto();
-    ProductStockDao productStockDao = new ProductStockDao();
     orderDto.setUserId(userId);
     orderDto.setOrderDate(LocalDateTime.now());
     orderDto.setTotalPrice(totalPrice);
@@ -78,6 +86,9 @@
         orderDetailDto.setOrderPrice(orderDetailDto.getCurrentPrice());
         ProductStockDto productStockDto = productStockDao.selectByProductStockId(orderDetailDto.getPrStId());
         System.out.println(productStockDto);
+        if(productStockDto.getQuantity() - orderDetailDto.getOrderQuantity() < 0){
+            continue;
+        }
         productStockDto.setQuantity(productStockDto.getQuantity() - orderDetailDto.getOrderQuantity());
         productStockDao.update(productStockDto);
         orderDetailDao.update(orderDetailDto);
