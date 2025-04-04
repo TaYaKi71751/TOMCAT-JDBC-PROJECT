@@ -9,7 +9,20 @@ import com.mlb.utils.UserInput;
 
 public class OrderDao {
     public Long insert(OrderDto dto){
-        String sql = "INSERT INTO orders (user_id, order_date, total_price, pay_id, shipping_address, shipping_date) VALUES (" + dto.getUserId() + ", TO_DATE(\'" + UserInput.dateToString(dto.getOrderDate()) + "\',\'YYYY-MM-DD HH24:MI:SS\'), " + dto.getTotalPrice() + ", \'" + dto.getPayId() + "\', \'" + dto.getShippingAddress() + "\', " + "NULL" + ")";
+        String sql = "INSERT INTO orders (user_id, order_date, total_price, pay_id, shipping_address, shipping_date) VALUES (" + dto.getUserId();
+        if(dto.getOrderDate() == null){
+            sql += ", NULL, ";
+        } else {
+            sql += ", TO_DATE(\'" + UserInput.dateToString(dto.getOrderDate()) + "\',\'YYYY-MM-DD HH24:MI:SS\'), ";
+        }
+        sql += dto.getTotalPrice() + ", ";
+        sql += "\'" + dto.getPayId() + "\', \'" + dto.getShippingAddress() + "\', ";
+        if(dto.getShippingDate() == null){
+            sql += "NULL";
+        } else {
+            sql += "TO_DATE(\'" + UserInput.dateToString(dto.getShippingDate()) + "\',\'YYYY-MM-DD HH24:MI:SS\')";
+        }
+        sql += ")";
         System.out.println(sql);
         DBConn.statementUpdate(sql);
         sql = "SELECT MAX(order_id) FROM orders WHERE user_id = " + dto.getUserId();
@@ -25,14 +38,22 @@ public class OrderDao {
     }
 
     public void update(OrderDto dto){
-        String sql = "UPDATE order SET " + //
-                        "user_id = " + dto.getUserId() + ", " +
-                        "order_date = TO_DATE(\'" + UserInput.dateToString(dto.getOrderDate()) + "\',\'YYYY-MM-DD HH24:MI:SS\'), " + 
-                        "total_price = \'" + dto.getTotalPrice() + "\', " + //
-                        "pay_id = \'" + dto.getPayId() + "\', " + //
-                        "shipping_address = \'" + dto.getShippingAddress() + "\', " + //
-                        "shipping_date = TO_DATE(\'" + UserInput.dateToString(dto.getShippingDate()) + "\',\'YYYY-MM-DD HH24:MI:SS\'), " + //
-                        "WHERE order_id = " + dto.getOrderId();
+        String sql = "UPDATE order SET "; //
+        sql += "user_id = " + dto.getUserId() + ", ";
+        if(dto.getOrderDate() == null){
+            sql += "order_date = NULL, ";
+        } else {
+            sql += "order_date = TO_DATE(\'" + UserInput.dateToString(dto.getOrderDate()) + "\',\'YYYY-MM-DD HH24:MI:SS\'), ";
+        }
+        sql += "total_price = \'" + dto.getTotalPrice() + "\', ";
+        sql += "pay_id = \'" + dto.getPayId() + "\', ";
+        sql += "shipping_address = \'" + dto.getShippingAddress() + "\', ";
+        if(dto.getShippingDate() == null){
+            sql += "shipping_date = NULL ";
+        } else {
+            sql += "shipping_date = TO_DATE(\'" + UserInput.dateToString(dto.getShippingDate()) + "\',\'YYYY-MM-DD HH24:MI:SS\') ";
+        }
+        sql += "WHERE order_id = " + dto.getOrderId();
         DBConn.statementUpdate(sql);
     }
 
@@ -49,7 +70,11 @@ public class OrderDao {
                 dto.setTotalPrice(rs.getLong("total_price"));
                 dto.setPayId(rs.getString("pay_id"));
                 dto.setShippingAddress(rs.getString("shipping_address"));
-                dto.setShippingDate(rs.getTimestamp("shipping_date").toLocalDateTime());
+                if(rs.getTimestamp("shipping_date") != null){
+                    dto.setShippingDate(rs.getTimestamp("shipping_date").toLocalDateTime());
+                } else {
+                    dto.setShippingDate(null);
+                }
                 list.add(dto);
             }
         } catch(Exception e){
@@ -71,7 +96,11 @@ public class OrderDao {
                 dto.setTotalPrice(rs.getLong("total_price"));
                 dto.setPayId(rs.getString("pay_id"));
                 dto.setShippingAddress(rs.getString("shipping_address"));
-                dto.setShippingDate(rs.getTimestamp("shipping_date").toLocalDateTime());
+                if(rs.getTimestamp("shipping_date") != null){
+                    dto.setShippingDate(rs.getTimestamp("shipping_date").toLocalDateTime());
+                } else {
+                    dto.setShippingDate(null);
+                }
                 list.add(dto);
             }
         } catch(Exception e){
@@ -93,7 +122,11 @@ public class OrderDao {
                 dto.setTotalPrice(rs.getLong("total_price"));
                 dto.setPayId(rs.getString("pay_id"));
                 dto.setShippingAddress(rs.getString("shipping_address"));
-                dto.setShippingDate(rs.getTimestamp("shipping_date").toLocalDateTime());
+                if(rs.getTimestamp("shipping_date") != null){
+                    dto.setShippingDate(rs.getTimestamp("shipping_date").toLocalDateTime());
+                } else {
+                    dto.setShippingDate(null);
+                }
             }
         } catch(Exception e){
             e.printStackTrace();
