@@ -5,6 +5,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%@ page import="java.util.*" %>
 <%@ page import="java.time.*" %>
+<%@ page import="com.mlb.product.dao.*" %>
+<%@ page import="com.mlb.product.dto.*" %>
 <%@ page import="com.mlb.order.pay.dao.*" %>
 <%@ page import="com.mlb.order.pay.dto.*" %>
 <html>
@@ -64,6 +66,7 @@
     }
     OrderDao orderDao = new OrderDao();
     OrderDto orderDto = new OrderDto();
+    ProductStockDao productStockDao = new ProductStockDao();
     orderDto.setUserId(userId);
     orderDto.setOrderDate(LocalDateTime.now());
     orderDto.setTotalPrice(totalPrice);
@@ -73,6 +76,10 @@
     for(OrderDetailDto orderDetailDto : orderDetailList){
         orderDetailDto.setOrderId(orderId);
         orderDetailDto.setOrderPrice(orderDetailDto.getCurrentPrice());
+        ProductStockDto productStockDto = productStockDao.selectByProductStockId(orderDetailDto.getPrStId());
+        System.out.println(productStockDto);
+        productStockDto.setQuantity(productStockDto.getQuantity() - orderDetailDto.getOrderQuantity());
+        productStockDao.update(productStockDto);
         orderDetailDao.update(orderDetailDto);
     }
     response.sendRedirect(request.getContextPath() + "/order/OrderPaySuccess.jsp?order_id=" + orderId);
