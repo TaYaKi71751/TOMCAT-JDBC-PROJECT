@@ -72,7 +72,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Noto+Sans+KR:wght@100..900&display=swap" rel="stylesheet">
 
 <!-- 아이콘 순서대로 기입해야함  -->
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=manage_accounts,shopping_bag" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=list_alt,manage_accounts,shopping_bag" />
 <style type="text/css">
 
 *{
@@ -276,25 +276,43 @@ function logprocess(action, id = "", pw = "") {
 			<c:if test="${not empty user_id && grade ne 'admin'}">
 				<span>${name} 님 <span style="color:red">일반사용자</span> 계정 입니다. </span>
 				<button class="logbtn" onclick="logprocess('logout')"><span class="link_white">logOut</span></button>
+				
+				
 				<a href="${approot}customer/update.jsp">
 					<span class="material-symbols-outlined" style="position: relative; top: 5px ; margin-left:5px">
 						manage_accounts
 						<span class="tooltiptext" >mypage</span>
 					</span>
 				</a>
+				
+				<a href="${approot}order/orderList.jsp?view=order">
+					
+					<span class="material-symbols-outlined" style="position: relative; top: 5px ; margin-left:5px">
+						list_alt
+						<span class="tooltiptext" >order_list</span>
+					</span>
+					
+				</a>
+				
 				<a href="${approot}order/orderList.jsp?view=cart">
 					
 					<span class="material-symbols-outlined" style="position: relative; top: 5px ; margin-left:5px">
 						shopping_bag
 						<span class="tooltiptext" >cart</span>
 					</span>
+					
 				</a>
+				
+				
+				
 			</c:if>
 			
 			<c:if test="${empty user_id}">
 				<a href="${approot}customer/register.jsp"><span class="link_white">join</span></a> | 
+				<%-- 
 				<button class="logbtn" onclick="logprocess('login','1234','adminpass')"><span class="link_white">adminlogIn</span></button>
 				<button class="logbtn" onclick="logprocess('login','johndoe1','password1')"><span class="link_white">customerlogIn</span></button>
+				--%>
 				<button class="logbtn" onclick="location.href='${approot}customer/login.jsp'"><span class="link_white">logIn</span></button>
 			</c:if>
 		
@@ -310,7 +328,7 @@ function logprocess(action, id = "", pw = "") {
   					<a class="link_white" href="${approot}product/AdminProductList.jsp">상품관리</a>
   				</div>
   				<div class="camenu">
-  					<a class="link_white" href="${approot}order/orderList.jsp?view=admin">주문조회</a>
+  					<a class="link_white" href="${approot}order/orderListAll.jsp?pageNum=1">주문조회</a>
   				</div>
   				<div class="camenu">
   					<a class="link_white" href="${approot}order/orderStatistics.jsp">매출통계</a>
