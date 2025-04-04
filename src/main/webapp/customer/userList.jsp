@@ -37,7 +37,7 @@
 
 	<%
 		if(!"admin".equals(session.getAttribute("grade"))){
-			response.sendRedirect(request.getContextPath() + "/customer/welcome.jsp?error=grade");
+			response.sendRedirect(request.getContextPath() + "/customer/login.jsp");
 		}
 	%>
 <%

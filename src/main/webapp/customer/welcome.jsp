@@ -7,13 +7,13 @@
     UserDto user = (sessionObj != null) ? (UserDto) sessionObj.getAttribute("user") : null;
     String error = request.getParameter("error");
 
-    if (user == null) {
+   if (user == null) {
         response.sendRedirect("login.jsp?error=Please login first");
         return;
     }
-    if (error != null && "grade".equals(error)){
-    	out.println("<script>alert(\"잘못된 접근 입니다.\");</script>");
-    }
+//    if (error != null && "grade".equals(error)){
+//    	out.println("<script>alert(\"잘못된 접근 입니다.\");</script>");
+//    }
 %>
 
 <!DOCTYPE html>
