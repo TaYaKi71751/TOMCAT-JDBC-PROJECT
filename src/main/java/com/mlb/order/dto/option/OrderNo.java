@@ -58,6 +58,12 @@ public class OrderNo {
 	}
 
 	public LocalDateTime getShippingDate() {
+		
+		if( shippingDate == null)
+		{
+			shippingDate = LocalDateTime.now();
+			shippingDate.plusDays(3);
+		}
 		return shippingDate;
 	}
 
