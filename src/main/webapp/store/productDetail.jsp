@@ -291,18 +291,18 @@ System.out.println(" size: " + request.getParameter("size"));
 
 				<div class="buttons">
 					<!-- 장바구니 버튼 -->
-					<form action="/cart/cart.jsp" method="post">
+					<form action="${contextPath}/cart/cart.jsp" method="post">
 						<input type="hidden" name="user_id" value="${user_id}"> 
 						<input type="hidden" name="pr_st_id" value="${prStID}"> 
-						<input type="hidden" name="order_price" value="${order_price}">
+						<input type="hidden" name="quantity" value="1">
 						<button type="submit" class="cart-button">장바구니</button>
 					</form>
 
 					<!-- 구매하기 버튼 -->
-					<form action="/order/payments.jsp" method="post">
+					<form action="${contextPath}/order/payments.jsp" method="post">
 						<input type="hidden" name="user_id" value="${user_id}"> 
 						<input type="hidden" name="pr_st_id" value="${prStId}">
-						<input type="hidden" name="order_price" value="${order_price}">
+						<input type="hidden" name="quantity" value="1">
 						<button type="submit" class="buy-button">구매하기</button>
 					</form>
 				</div>
