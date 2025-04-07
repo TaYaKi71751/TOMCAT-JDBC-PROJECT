@@ -75,7 +75,7 @@ body{
 	border-bottom:2px solid #b3ccff;
 	padding:10px;
 	font-weight: 400;
-	font-size:3.0em;
+	font-size:2.0em;
 }
 
 .orderContainer{
@@ -214,6 +214,22 @@ function toggleAll(source) {
     checkboxes.forEach(checkbox => checkbox.checked = source.checked);
 }
 
+function validateChecked(event) {
+	let bcheck = false;
+	let checkboxes = document.querySelectorAll('.item');
+    checkboxes.forEach(checkbox => { 
+    	if( checkbox.checked )
+    		bcheck = true;
+    	
+    });
+
+  if (!bcheck) {
+    alert('주문하실 목록을 체크 선택해주세요.');
+    event.preventDefault(); // 폼 제출 방지
+  }
+  
+}
+
 function orderDetailProcess(action, id = "") {
     // 요청 파라미터 구성
     const params = new URLSearchParams();
@@ -296,7 +312,7 @@ viewMode: ${viewMode}<br>
 		 --%>
 		 
 		<c:if test="${ viewMode eq 'cart' }" >
-			<form action="${approot}order/payments.jsp" method="get">
+			<form action="${approot}order/payments.jsp" method="get" onsubmit="validateChecked(event)" >
 			<label class="selchkAll"><input type="checkbox" id="selectAll" onclick="toggleAll(this)" checked> 전체 선택</label>
 		</c:if>
 		
@@ -307,7 +323,7 @@ viewMode: ${viewMode}<br>
 			<c:forEach var="orderDetail" items="${orderDto.getOrderDetailPrId(orderPrId) }" varStatus="loop" >
 				<c:if test="${loop.count eq 1}">
 				<span class="productTitle">상품명: ${orderDetail.prName}</span><br>
-				<span><img width="200" src="${thumImgDir}${orderDetail.prThumImg}" /></span><br>
+				<span><img width="150" src="${thumImgDir}${orderDetail.prThumImg}" /></span><br>
 				</c:if>
 				
 				<%--

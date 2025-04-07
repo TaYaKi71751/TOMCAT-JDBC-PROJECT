@@ -308,15 +308,13 @@ public class OrderListDao {
 		
 	}
 
-	public void update(ProductDto dto) {
-		/*
+	public void updateShippingDate(Long orderId) {
+		
 		String sql = String.format(
-				"UPDATE CUSTOMER SET name = '%s', age = %d, height = %.2f, birthday = TO_DATE('%s', 'YYYY-MM-DD HH24:MI:SS') WHERE id = %d",
+				"UPDATE ORDERS SET shipping_date = sysdate WHERE order_id = %d", orderId );
 				
-				dto.getName(), dto.getAge(), dto.getHeight(),
-                UserInput.dateToString(dto.getBirthday()), dto.getId());
 		DBConn.statementUpdate(sql);
-		*/
+		
 	}
 
 }

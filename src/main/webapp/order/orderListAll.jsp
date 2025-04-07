@@ -36,22 +36,34 @@
 			if( request.getParameter("pageNum") != null )
 			{
 				currentPageNum = Integer.parseInt( (String) request.getParameter("pageNum") );
+				
 				if( orderCnt > 0 )
-					totalPageCnt = ( orderCnt / listViewCnt ) + 1;
+					totalPageCnt = (long) Math.ceil( (double)orderCnt / listViewCnt );
 				
 				startLinkPageNum = ( currentPageNum / 10 ) + 1;
 				orderList = orderListDao.selectOrderUserList( currentPageNum , listViewCnt , 0L);
+				
+				System.out.println("currentPageNum: " + currentPageNum + " , orderCnt: " + orderCnt  );
+				System.out.println("startLinkPageNum: " + startLinkPageNum + " , totalPageCnt: " + totalPageCnt  );
 			}
 			
 			if( request.getParameter("orderId") != null )
 			{
 				orderId = Long.parseLong( (String)request.getParameter("orderId") );
+				
+				if( request.getParameter("shippingDate") != null )
+				{
+					orderListDao.updateShippingDate( orderId );
+				}
+				
 				orderList = orderListDao.selectOrderUserList(0,0L,orderId);
 				oderDetails = orderListDao.selectOrderList(0L,orderId);
 				
 				pageContext.setAttribute("orderId" , orderId);
 				pageContext.setAttribute("oderDetails" , oderDetails);
 				System.out.println("oderDetails : " + oderDetails.size());
+				
+				
 			}
 			
 			if( orderList != null && orderList.size() > 0 )
@@ -245,6 +257,15 @@ body{
   background-color: darkgray;
 }
 
+.footPageLink:link , .footPageLink:visited {
+	text-decoration: none;
+	color:black;
+}
+
+.footPageLink:hover, .footPageLink:active {
+	text-decoration: underline;
+}
+
 
 </style>
 
@@ -300,6 +321,9 @@ body{
 			<c:if test="${orderId eq null }">
 				<a href="orderListAll.jsp?orderId=${dto.orderId}" class="btnDetail" >주문상세</a>
 			</c:if>
+			<c:if test="${orderId ne null && dto.shippingDate.toLocalDate() eq null}">
+				<a href="orderListAll.jsp?orderId=${dto.orderId}&shippingDate=true" class="btnDetail" >발송완료</a>
+			</c:if>
 			</td>
 		</tr>
 	</c:forEach>
@@ -318,7 +342,7 @@ body{
 			    </c:if>
 			    
 			    <c:if test="${pageNum <= totalPageCnt}">
-			    	<span> <a href="orderListAll.jsp?pageNum=${pageNum}"> ${pageNum} </a> </span>
+			    	<span> &nbsp;&nbsp; <a href="orderListAll.jsp?pageNum=${pageNum}" class="footPageLink"> ${pageNum} </a> &nbsp;&nbsp; </span>
 			    	<c:if test="${pageNum < totalPageCnt}">
 			    		<span> | </span>
 			    	</c:if>
@@ -385,6 +409,7 @@ body{
 		<div class="orderListBtnContainer">
 			<a href="orderListAll.jsp?pageNum=1" class="orderListBtn" >전체 주문 내역</a>
 		</div>
+		
 		
 
 	</c:forEach>

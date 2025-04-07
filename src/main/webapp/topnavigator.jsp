@@ -74,34 +74,31 @@
 <!-- 아이콘 순서대로 기입해야함  -->
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=list_alt,manage_accounts,shopping_bag" />
 <style type="text/css">
-
-*{
+* {
 	margin: 0px;
 	padding: 0px;
 }
 
-
-
 #topnavigation_container {
 	display: flex;
-	position:sticky;
-	justify-content:center;
-	top:0px;
-	background:black;
-	width:100%;
+	position: sticky;
+	justify-content: center;
+	top: 0px;
+	background: black;
+	width: 100%;
 	height: 92px;
-	color:#FFFFFF;
+	color: #FFFFFF;
 	font-family: "Lucida Sans", sans-serif;
 	z-index: 1000;
 }
 
 #topnavigation_container .logo {
-	margin:0px 20px;
+	margin: 0px 20px;
 	width: 80px;
 }
 
 #topnavigation_container .navibox_container {
-	margin:0px 20px;
+	margin: 0px 20px;
 	width: 900px;
 	display: block;
 }
@@ -109,20 +106,20 @@
 #topnavigation_container .usermenu {
 	font-family: "Lucida Sans", sans-serif;
 	font-size: 1.0em;
-	width:100%;
-	height:30px;
-	justify-content:center;
-	align-content:center;
-	text-align:right;
-	margin-top:20px;
+	width: 100%;
+	height: 30px;
+	justify-content: center;
+	align-content: center;
+	text-align: right;
+	margin-top: 20px;
 }
 
 #topnavigation_container .customer {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-  background-color: #FFFF00;
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+	background-color: #FFFF00;
 }
 
 #topnavigation_container .camenu_container {
@@ -130,93 +127,119 @@
 }
 
 #topnavigation_container .camenu_container .camenu {
-	width:25%;
-	height:40px;
-	align-content:center;
-	color:#FFFFFF;
+	width: 25%;
+	height: 40px;
+	align-content: center;
+	color: #FFFFFF;
 	text-align: center;
 }
 
 #topnavigation_container .camenu_container .camenu:hover {
 	background-color: #222222;
-	width:25%;
-	color:#FFFFFF;
+	width: 25%;
+	color: #FFFFFF;
 	text-align: center;
 }
 
-.link_white{
-	color:#DDDDFF;
+.link_white {
+	color: #DDDDFF;
 	font-size: 1.0em;
 	text-decoration: none;
 	font-family: "Kanit", sans-serif;
 	font-weight: 600;
 }
-.link_white:hover{
-	color:#FFFFFF;
-}
-.link_white:active :visited{
+
+.link_white:hover {
+	color: #FFFFFF;
 }
 
-.logbtn{
+.link_white:active :visited {
+	
+}
+
+.logbtn {
 	background-color: black;
 }
 
 .logbtn {
-  border: none;
-  outline: none;
-  background-color: inherit ;
-  cursor: pointer;
+	border: none;
+	outline: none;
+	background-color: inherit;
+	cursor: pointer;
 }
 
-.material-symbols-outlined{
-	color:gray;
+.material-symbols-outlined {
+	color: gray;
 }
-.material-symbols-outlined:hover{
-	color:white;
+
+.material-symbols-outlined:hover {
+	color: white;
 }
-.material-symbols-outlined:active :visited{
+
+.material-symbols-outlined:active :visited {
+	
 }
 
 .material-symbols-outlined .tooltiptext {
-	
-    visibility: hidden;
- 	width: 50px;
- 	background-color: #222222;
- 	color: #fff;
- 	text-align: center;
- 	font-family:dotum;
- 	font-size:10px;
- 	text-transform:capitalize;
- 	border-radius: 6px;
- 	padding: 5px 0;
-  
-    /* Position the tooltip */
- 	position: absolute;
- 	z-index: 1;
- 	bottom: 100%;
- 	left: 50%;
- 	margin-left: -25px; 
+	visibility: hidden;
+	width: 50px;
+	background-color: #222222;
+	color: #fff;
+	text-align: center;
+	font-family: dotum;
+	font-size: 10px;
+	text-transform: capitalize;
+	border-radius: 6px;
+	padding: 5px 0;
+	/* Position the tooltip */
+	position: absolute;
+	z-index: 1;
+	bottom: 100%;
+	left: 50%;
+	margin-left: -25px;
 }
 
 .material-symbols-outlined:hover {
 	cursor: pointer;
 }
+
 .material-symbols-outlined:hover .tooltiptext {
-    visibility: visible;
+	visibility: visible;
 }
 
-
-
 .noto-sans-kr-400 {
-  font-family: "Noto Sans KR", sans-serif;
-  font-optical-sizing: auto;
-  font-weight: 400;
-  font-style: normal;
+	font-family: "Noto Sans KR", sans-serif;
+	font-optical-sizing: auto;
+	font-weight: 400;
+	font-style: normal;
+}
+
+#scrollToOutputBtn {
+	position: fixed;
+	bottom: 10px;
+	right: 10px;
+	padding: 10px 15px;
+	background-color: #007BFF;
+	color: white;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+#scrollToOutputBtn:hover {
+	background-color: #0056b3;
 }
 
 </style>
 
 <script>
+function scrollToOutput() {
+    //const outputElement = document.getElementById('.logo');
+    //outputElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
 function logprocess(action, id = "", pw = "") {
     // 요청 파라미터 구성
     const params = new URLSearchParams();
@@ -254,7 +277,7 @@ function logprocess(action, id = "", pw = "") {
     .catch(err => console.error("Error:", err));
 }
 </script>
-
+<button id="scrollToOutputBtn" onclick="scrollToOutput()">TOP</button>
 <div id="topnavigation_container">
 
 	<c:if test="${not empty user_id && grade eq 'admin'}">
