@@ -34,7 +34,7 @@ public class LoginServlet extends HttpServlet {
             session.setAttribute("user_id", user.getUserId().toString());
             session.setAttribute("grade", user.getGrade());
             session.setAttribute("name", user.getName());
-            response.sendRedirect("../topnavigator.jsp");
+            response.sendRedirect("../index.jsp");
         } else {
             response.sendRedirect("login.jsp?error=Invalid Credentials");
         }

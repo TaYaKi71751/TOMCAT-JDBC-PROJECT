@@ -71,7 +71,7 @@ public class UpdateServlet extends HttpServlet {
         if (updateSuccess) {
             // 업데이트 성공 시 세션에 변경된 정보 업데이트
             session.setAttribute("user", user);
-            response.sendRedirect("welcome.jsp");  // 업데이트 완료 후 welcome 페이지로 리디렉션
+            response.sendRedirect("../index.jsp");  // 업데이트 완료 후 welcome 페이지로 리디렉션
         } else {
             // 업데이트 실패 시 처리
             request.setAttribute("errorMessage", "Update failed. Please try again.");

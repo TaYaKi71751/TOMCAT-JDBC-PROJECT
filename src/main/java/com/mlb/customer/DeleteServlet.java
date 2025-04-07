@@ -40,6 +40,7 @@ public class DeleteServlet extends HttpServlet {
 
         // 삭제 결과에 따른 처리
         if (isDeleted) {
+        	request.getSession().invalidate();
             response.sendRedirect("userList.jsp?msg=success"); // 삭제 성공 시 목록으로 이동
         } else {
             response.sendRedirect("userList.jsp?msg=failure"); // 삭제 실패 시 메시지 전달
