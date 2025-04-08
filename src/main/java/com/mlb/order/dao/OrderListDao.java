@@ -220,7 +220,8 @@ public class OrderListDao {
 		sb.append("where OD.order_id is null and ");
 		sb.append(String.format("OD.user_id = %d and ", userId));
 		sb.append("OD.pr_st_id = PS.pr_st_id and ");
-		sb.append("PS.pr_id = P.pr_id");
+		sb.append("PS.pr_id = P.pr_id ");
+		sb.append("order by OD.order_detail_id desc");
 
 		String sql = sb.toString();
 		
@@ -293,10 +294,38 @@ public class OrderListDao {
 				price = rs.getInt("price");
 			}
 			
-			sql = String.format(
-					"INSERT INTO ORDER_DETAILS (order_id, user_id, pr_st_id, order_quantity, order_price) VALUES (null, %d, %d, %d, %d)" , 
-					userId , prstId , quantity , price );
-	                
+			
+			sql = String.format( "SELECT order_detail_id , order_quantity  FROM ORDER_DETAILS WHERE order_id is null and user_id = %d and pr_st_id = %d" , userId , prstId );
+			
+			System.out.println( "sql: " + sql);
+			rs = DBConn.statementQuery(sql);
+			
+			int hasquantity = 0;
+			Long order_detail_id = 0L;
+			
+			while (rs.next()) {
+				hasquantity = rs.getInt("order_quantity");
+				order_detail_id = rs.getLong("order_detail_id");
+			}
+			
+			if( hasquantity == 0 )
+			{
+				// 새로운 장바구니 
+				sql = String.format(
+						"INSERT INTO ORDER_DETAILS (order_id, user_id, pr_st_id, order_quantity, order_price) VALUES (null, %d, %d, %d, %d)" , 
+						userId , prstId , quantity , price );
+				
+			}
+			else
+			{
+				// 기존에 똑같은 상품 , 컬러 , 사이즈인 상품인 경우 수량만 추가 
+				int sumQuantity = hasquantity + quantity;
+				System.out.println( "sumQuantity: " + sumQuantity);
+				sql = String.format( "UPDATE ORDER_DETAILS SET order_quantity = %d WHERE order_detail_id = %d" , sumQuantity , order_detail_id );
+				
+			}
+	        
+			System.out.println( "sql: " + sql);
 			DBConn.statementUpdate(sql);
 			
 
