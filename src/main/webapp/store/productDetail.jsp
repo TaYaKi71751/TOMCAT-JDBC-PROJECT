@@ -292,19 +292,35 @@ System.out.println(" size: " + request.getParameter("size"));
 
 				<div class="buttons">
 					<!-- 장바구니 버튼 -->
-					<form action="${contextPath}/cart/cart.jsp" method="post">
+					<form action="" method="post">
 						<input type="hidden" name="user_id" value="${user_id}"> 
 						<input type="hidden" name="pr_st_id" value="${prStId}"> 
 						<input type="hidden" name="quantity" value="1">
-						<button type="submit" class="cart-button">장바구니</button>
+						<button class="cart-button" formaction="<%= selectedColor != null && selectedSize != null ? (contextPath + "/cart/cart.jsp") : "" %>" onclick="<%
+							if(session.getAttribute("user_id") == null) {
+								out.println("alert('로그인 후 이용 가능합니다.'); location.href='" + contextPath + "/customer/login.jsp'; return false;");
+							} else if(selectedColor == null || selectedSize == null) {
+								out.println("alert('옵션을 선택해 주세요'); return false;");
+							} else {
+								out.println("this.form.submit();");
+							}
+						%>" >장바구니</button>
 					</form>
 
 					<!-- 구매하기 버튼 -->
-					<form action="${contextPath}/order/payments.jsp" method="post">
+					<form action="" method="post">
 						<input type="hidden" name="user_id" value="${user_id}"> 
 						<input type="hidden" name="pr_st_id" value="${prStId}">
 						<input type="hidden" name="quantity" value="1">
-						<button type="submit" class="buy-button">구매하기</button>
+						<button class="buy-button" formaction="<%= selectedColor != null && selectedSize != null ? (contextPath + "/order/payments.jsp") : "" %>" onclick="<%
+							if(session.getAttribute("user_id") == null) {
+								out.println("alert('로그인 후 이용 가능합니다.'); location.href='" + contextPath + "/customer/login.jsp'; return false;");
+							} else if(selectedColor == null || selectedSize == null) {
+								out.println("alert('옵션을 선택해 주세요'); return false;");
+							} else {
+								out.println("this.form.submit();");
+							}
+						%>" >구매하기</button>
 					</form>
 				</div>
 			</div>
