@@ -39,7 +39,7 @@
 <jsp:include page="/topnavigator.jsp"></jsp:include>
     <div class="product">
     <form action="" method="post">
-        <h1>상품 수정</h1>
+        <h1>상품 추가</h1>
         <table>
             <tr>
                 <th>상품명</th>
