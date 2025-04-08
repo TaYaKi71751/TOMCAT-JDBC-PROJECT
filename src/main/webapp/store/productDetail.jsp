@@ -4,9 +4,9 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ page import="com.mlb.store.dao.StoreProductWithStocksDao"%>
 <%@ page import="com.mlb.store.dto.StoreProductWithStocksDto"%>
+<%@ page import="com.mlb.product.dao.ColorDao" %>
 <%@ page import="java.util.ArrayList"%>
 <%@ page import="javax.servlet.http.HttpSession"%>
-
 <%
 String contextPath = request.getContextPath();
 String prIDParam = request.getParameter("pr_id");
@@ -265,7 +265,13 @@ System.out.println(" size: " + request.getParameter("size"));
 						<c:forEach var="stock" items="${product.productStocks}">
 							<c:if test="${not fn:contains(checkedColors, stock.clID)}">
 								<option value="${stock.clID}"
-									${selectedColor == stock.clID ? "selected" : ""}>${stock.clID}</option>
+									${selectedColor == stock.clID ? "selected" : ""}><%
+										StoreProductWithStocksDto stockDto = (StoreProductWithStocksDto) pageContext.getAttribute("stock");
+										System.out.println("stockDto: " + stockDto);
+										if (stockDto != null) {
+											out.println((new ColorDao()).getColorById(stockDto.getClID()).getCl_name());
+										}
+									%></option>
 								<c:set var="checkedColors"
 									value="${checkedColors},${stock.clID}" />
 							</c:if>
