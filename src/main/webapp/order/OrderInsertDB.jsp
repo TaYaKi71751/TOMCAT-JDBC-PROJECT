@@ -9,6 +9,7 @@
 <%@ page import="com.mlb.product.dto.*" %>
 <%@ page import="com.mlb.order.pay.dao.*" %>
 <%@ page import="com.mlb.order.pay.dto.*" %>
+<%@ page import="com.mlb.customer.UserDto" %>
 <html>
 <head>
 	<script src="http://code.jquery.com/jquery-latest.min.js"></script>
@@ -97,7 +98,7 @@ IMP.init("imp45535874");
 + "		name: 'MLB',"
 + "		amount: " + totalPrice + ","
 +"		buyer_email: '',"
-+"		buyer_name: 'MLB',"
++"		buyer_name: '" + ((UserDto)session.getAttribute("user")).getName() + "',"
 +"	}, function(rsp) {"
 +"		console.log(rsp);"
 		
@@ -123,7 +124,7 @@ IMP.init("imp45535874");
 + "		name: 'MLB',"
 + "		amount: " + totalPrice + ","
 +"		buyer_email: '',"
-+"		buyer_name: 'MLB',"
++"		buyer_name: '" + ((UserDto)session.getAttribute("user")).getName() + "',"
 +"	}, function(rsp) {"
 +"		console.log(rsp);"
 		
