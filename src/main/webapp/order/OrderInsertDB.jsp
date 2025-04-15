@@ -112,6 +112,9 @@ IMP.init("imp45535874");
 +"			msg += '에러내용 : ' + rsp.error_msg;"
 +"		}"
 +"		alert(msg);"
++"      if (!rsp.success) {"
++"          document.location.reload();"
++"      }"
 +"	});"
 +"</script>");
 				}
@@ -138,6 +141,9 @@ IMP.init("imp45535874");
 +"			msg += '에러내용 : ' + rsp.error_msg;"
 +"		}"
 +"		alert(msg);"
++"      if (!rsp.success) {"
++"          document.location.reload();"
++"      }"
 +"	});"
 +"</script>");
 
