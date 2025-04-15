@@ -139,8 +139,8 @@
         <div class="payment">
             <label for="payment">결제수단</label>
             <select name="pay_id" required>
-													<%--
                 <option value="card">신용카드</option>
+													<%--
                 <option value="naverpay">네이버 페이</option>
 													--%>
                 <option value="kakao">카카오 페이</option>

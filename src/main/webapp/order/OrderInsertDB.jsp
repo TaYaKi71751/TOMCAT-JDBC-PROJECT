@@ -114,6 +114,33 @@ IMP.init("imp45535874");
 +"	});"
 +"</script>");
 				}
+				if("card".equals(pay_id)){
+						out.println("<script>"
+							+ "IMP.request_pay({"
++ "		pg: 'html5_inicis',"
++ "  pay_method: 'card',"
++ "		merchant_uid: 'merchant_' + new Date().getTime(),"
++ "		name: 'MLB',"
++ "		amount: " + totalPrice + ","
++"		buyer_email: '',"
++"		buyer_name: 'MLB',"
++"	}, function(rsp) {"
++"		console.log(rsp);"
+		
+		 //결제 성공 시
++"		if (rsp.success) {"
++"			var msg = '결제가 완료되었습니다.';"
++"			console.log('결제성공 ');"
++					"document.location.href = '" + request.getContextPath() + "/order/OrderInsertDB.jsp?success=true&" + params + "';"
++"		} else {"
++"			var msg = '결제에 실패하였습니다.';"
++"			msg += '에러내용 : ' + rsp.error_msg;"
++"		}"
++"		alert(msg);"
++"	});"
++"</script>");
+
+				}
 				if(success != null && success.equals("true")){
     OrderDao orderDao = new OrderDao();
     OrderDto orderDto = new OrderDto();
