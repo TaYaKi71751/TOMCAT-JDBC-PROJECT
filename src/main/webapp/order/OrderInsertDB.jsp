@@ -11,6 +11,12 @@
 <%@ page import="com.mlb.order.pay.dto.*" %>
 <html>
 <head>
+	<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script type="text/javascript"	src="https://cdn.iamport.kr/js/iamport.payment-1.2.0.js"></script>
+<script>
+var IMP = window.IMP;
+IMP.init("imp45535874");
+</script>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>MLB - OrderInsertDB</title>
     <%
@@ -31,7 +37,13 @@
     String pay_id = request.getParameter("pay_id");
     String shippingAddress = request.getParameter("shipping_address");
     String[] order_detail_ids_string = request.getParameterValues("order_detail_id");
+				String success = request.getParameter("success");
     String params = "";
+				params += "shipping_address=" + shippingAddress;
+				params += "&pay_id=" + pay_id;
+				if(success!= null && success.equals("true")){
+				 		params += "&success=true";
+				}
     Long totalPrice = 0l;
     ProductStockDao productStockDao = new ProductStockDao();
     OrderDetailDao orderDetailDao = new OrderDetailDao();
@@ -73,6 +85,36 @@
         response.sendRedirect(request.getContextPath() + "/order/payments.jsp?error=invalid_pay_id" + params);
         return;
     }
+    for(OrderDetailDto orderDetailDto : orderDetailList){
+        orderDetailDto.setOrderPrice(orderDetailDto.getCurrentPrice());
+				}
+				if("kakao".equals(pay_id)){
+						out.println("<script>"
+							+ "IMP.request_pay({"
++ "		pg: 'kakaopay',"
++ "  pay_method: 'kakaopay',"
++ "		merchant_uid: 'merchant_' + new Date().getTime(),"
++ "		name: 'MLB',"
++ "		amount: " + totalPrice + ","
++"		buyer_email: '',"
++"		buyer_name: 'MLB',"
++"	}, function(rsp) {"
++"		console.log(rsp);"
+		
+		 //결제 성공 시
++"		if (rsp.success) {"
++"			var msg = '결제가 완료되었습니다.';"
++"			console.log('결제성공 ');"
++					"document.location.href = '" + request.getContextPath() + "/order/OrderInsertDB.jsp?success=true&" + params + "';"
++"		} else {"
++"			var msg = '결제에 실패하였습니다.';"
++"			msg += '에러내용 : ' + rsp.error_msg;"
++"		}"
++"		alert(msg);"
++"	});"
++"</script>");
+				}
+				if(success != null && success.equals("true")){
     OrderDao orderDao = new OrderDao();
     OrderDto orderDto = new OrderDto();
     orderDto.setUserId(userId);
@@ -94,6 +136,7 @@
         orderDetailDao.update(orderDetailDto);
     }
     response.sendRedirect(request.getContextPath() + "/order/OrderPaySuccess.jsp?order_id=" + orderId);
+				}
     %>
 </head>
 <body>
