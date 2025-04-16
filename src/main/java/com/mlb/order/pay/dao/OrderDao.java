@@ -133,4 +133,8 @@ public class OrderDao {
         }
         return dto;
     }
+    public void delete(Long orderId){
+        String sql = "DELETE FROM orders WHERE order_id = " + orderId;
+        DBConn.statementUpdate(sql);
+    }
 }

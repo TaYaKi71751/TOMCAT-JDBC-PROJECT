@@ -294,6 +294,10 @@ viewMode: ${viewMode}<br>
 	<c:forEach var="orderDto" items="${orderList}">
 		<c:if test="${ viewMode eq 'order'}" >
 		<div class="orderContainer">
+		<form action="${approot}order/cancel.jsp" method="get">
+		<input type="hidden" name="order_id" value="${orderDto.orderno.orderId }">
+		<input type="submit" value="주문 취소" class="orderBtn">
+		</form>
 		<span class="orderInfoTxt">주문번호: ${orderDto.orderno.orderId }</span>
 		<span class="orderInfoTxt">주문일: ${orderDto.orderno.orderDate.toLocalDate() }</span>
 		<span class="orderInfoTxt">결제금액: <fmt:formatNumber value="${orderDto.orderno.totalPrice }" type="currency" /></span>

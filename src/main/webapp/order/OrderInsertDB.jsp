@@ -39,8 +39,10 @@ IMP.init("imp45535874");
     String shippingAddress = request.getParameter("shipping_address");
     String[] order_detail_ids_string = request.getParameterValues("order_detail_id");
 				String success = request.getParameter("success");
+    String orderIdString = request.getParameter("order_id");
+    Long orderId = null;
     String params = "";
-				params += "shipping_address=" + shippingAddress;
+				params += "&shipping_address=" + shippingAddress;
 				params += "&pay_id=" + pay_id;
 				if(success!= null && success.equals("true")){
 				 		params += "&success=true";
@@ -86,15 +88,50 @@ IMP.init("imp45535874");
         response.sendRedirect(request.getContextPath() + "/order/payments.jsp?error=invalid_pay_id" + params);
         return;
     }
+    if(orderIdString!= null){
+        try {
+            orderId = Long.parseLong(orderIdString);
+            System.out.println("orderId : " + orderId);
+            OrderDao orderDao = new OrderDao();
+            OrderDto orderDto = orderDao.selectByOrderId(orderId);
+            if(orderDto == null){
+                response.sendRedirect(request.getContextPath() + "/order/payments.jsp?error=invalid_order_id" + params);
+                return;
+            }
+            if(orderDto.getUserId() != userId){
+                response.sendRedirect(request.getContextPath() + "/order/payments.jsp?error=invalid_order_id" + params);
+                return;
+            }
+        } catch(Exception e){
+            System.out.println("error : " + e);
+            orderId = null;
+        }
+    }
     for(OrderDetailDto orderDetailDto : orderDetailList){
         orderDetailDto.setOrderPrice(orderDetailDto.getCurrentPrice());
 				}
+
+    OrderDao orderDao = new OrderDao();
+    OrderDto orderDto = new OrderDto();
+    orderDto.setUserId(userId);
+    orderDto.setOrderDate(LocalDateTime.now());
+    orderDto.setTotalPrice(totalPrice);
+    orderDto.setPayId(pay_id);
+    orderDto.setShippingAddress(shippingAddress);
+    if (orderId != null){
+        orderDto.setOrderId(orderId);
+        params += "&order_id=" + orderId;
+        orderDao.update(orderDto);
+    } else {
+        orderId = orderDao.insert(orderDto);
+        params += "&order_id=" + orderId;
+    }
 				if("kakao".equals(pay_id)){
 						out.println("<script>"
 							+ "IMP.request_pay({"
 + "		pg: 'kakaopay',"
 + "  pay_method: 'kakaopay',"
-+ "		merchant_uid: 'merchant_' + new Date().getTime(),"
++ "		merchant_uid: 'merchant_" + orderId + "',"
 + "		name: 'MLB',"
 + "		amount: " + totalPrice + ","
 +"		buyer_email: '',"
@@ -113,7 +150,7 @@ IMP.init("imp45535874");
 +"		}"
 +"		alert(msg);"
 +"      if (!rsp.success) {"
-+"          document.location.reload();"
++"          document.location.href = '" + request.getContextPath() + "/order/OrderInsertDB.jsp?success=false" + params + "';"
 +"      }"
 +"	});"
 +"</script>");
@@ -123,7 +160,7 @@ IMP.init("imp45535874");
 							+ "IMP.request_pay({"
 + "		pg: 'html5_inicis',"
 + "  pay_method: 'card',"
-+ "		merchant_uid: 'merchant_' + new Date().getTime(),"
++ "		merchant_uid: 'merchant_" + orderId + "',"
 + "		name: 'MLB',"
 + "		amount: " + totalPrice + ","
 +"		buyer_email: '',"
@@ -142,21 +179,13 @@ IMP.init("imp45535874");
 +"		}"
 +"		alert(msg);"
 +"      if (!rsp.success) {"
-+"          document.location.reload();"
++"          document.location.href = '" + request.getContextPath() + "/order/OrderInsertDB.jsp?success=false" + params + "';"
 +"      }"
 +"	});"
 +"</script>");
 
 				}
 				if(success != null && success.equals("true")){
-    OrderDao orderDao = new OrderDao();
-    OrderDto orderDto = new OrderDto();
-    orderDto.setUserId(userId);
-    orderDto.setOrderDate(LocalDateTime.now());
-    orderDto.setTotalPrice(totalPrice);
-    orderDto.setPayId(pay_id);
-    orderDto.setShippingAddress(shippingAddress);
-    Long orderId = orderDao.insert(orderDto);
     for(OrderDetailDto orderDetailDto : orderDetailList){
         orderDetailDto.setOrderId(orderId);
         orderDetailDto.setOrderPrice(orderDetailDto.getCurrentPrice());
